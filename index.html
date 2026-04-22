@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UI nghiệp vụ VIII.6</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Hệ thống nghiệp vụ </div>
+
+      <div class="menu-group-title">Quản lý nghiệp vụ</div>
+      <button class="menu-item" data-view="task137">Giao nhiệm vụ thực hiện</button>
+      <button class="menu-item" data-view="task138">Đăng ký nhiệm vụ thực hiện</button>
+      <button class="menu-item" data-view="task139">Duyệt / Từ chối đăng ký</button>
+
+      <div class="menu-group-title">Báo cáo</div>
+      <button class="menu-item" data-view="overview">Tổng quan xử lý hồ sơ</button>
+    </aside>
+
+    <section class="main">
+      <header class="topbar">
+        <h1>Giao diện đang tab - list và chi tiết</h1>
+        <small id="clock"></small>
+      </header>
+
+      <div class="workspace">
+        <div class="tabs" id="tabs"></div>
+        <div id="panelContainer" class="panel">
+          <div class="empty">Chọn chức năng bên trái để mở tab.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const viewConfigs = {
+      task137: {
+        title: "Giao nhiệm vụ thực hiện",
+        columns: ["Mã NV", "Đơn vị giao", "Đơn vị nhận", "Số lượng", "Trạng thái"],
+        rows: [
+          { id: "NV-137-01", assigner: "Sở TNMT", receiver: "Phòng TN huyện A", amount: 120, status: "Đã giao", timeline: "01/04/2026 - 20/04/2026", note: "Dữ liệu thuộc tính đặt ở" },
+          { id: "NV-137-02", assigner: "Sở TNMT", receiver: "Phòng TN huyện B", amount: 95, status: "Chờ tiếp nhận", timeline: "05/04/2026 - 30/04/2026", note: "Cập nhật biến động địa chính" }
+        ],
+        detailMap: [
+          ["Mã nhiệm vụ", "id"],
+          ["Đơn vị giao", "assigner"],
+          ["Đơn vị nhận", "receiver"],
+          ["Số lượng", "amount"],
+          ["Thời gian", "timeline"],
+          ["Nội dung", "note"],
+          ["Trạng thái", "status"]
+        ]
+      },
+      task138: {
+        title: "Đăng ký nhiệm vụ thực hiện",
+        columns: ["Mã DK", "Đơn vị đăng ký", "Nhiệm vụ", "Số lượng", "Trạng thái"],
+        rows: [
+          { id: "DK-138-11", unit: "Phòng TN huyện A", task: "Chuẩn hóa thửa đất khu Bắc", amount: 80, status: "Đã duyệt", date: "08/04/2026", note: "Đăng ký đợt 1" },
+          { id: "DK-138-12", unit: "Phòng TN huyện C", task: "Thu thập hiện trạng sử dụng đất", amount: 60, status: "Từ chối", date: "09/04/2026", note: "Thiếu kế hoạch chi tiết" }
+        ],
+        detailMap: [
+          ["Mã đăng ký", "id"],
+          ["Đơn vị đăng ký", "unit"],
+          ["Nhiệm vụ", "task"],
+          ["Số lượng", "amount"],
+          ["Trạng thái", "status"],
+          ["Ngày đăng ký", "date"],
+          ["Ghi chú", "note"]
+        ]
+      },
+      task139: {
+        title: "Duyệt / Từ chối đăng ký nhiệm vụ",
+        columns: ["Hồ sơ", "Đơn vị", "Kết quả", "Lý do từ chối", "Người xử lý"],
+        rows: [
+          { id: "DK-138-11", unit: "Phòng TN huyện A", result: "Đã duyệt", reason: "-", officer: "admin.npc", status: "Đã duyệt", updated: "10/04/2026 14:12" },
+          { id: "DK-138-12", unit: "Phòng TN huyện C", result: "Từ chối", reason: "Thiếu kế hoạch chi tiết", officer: "admin.npc", status: "Từ chối", updated: "10/04/2026 09:30" }
+        ],
+        detailMap: [
+          ["Mã hồ sơ", "id"],
+          ["Đơn vị", "unit"],
+          ["Kết quả", "result"],
+          ["Lý do từ chối", "reason"],  
+          ["Người xử lý", "officer"],
+          ["Cập nhật lúc", "updated"],
+          ["Trạng thái", "status"]
+        ]
+      },
+      overview: {
+        title: "Tổng quan xử lý hồ sơ",
+        columns: ["Chỉ tiêu", "Giá trị", "Ghi chú"],
+        rows: [
+          { metric: "Tổng nhiệm vụ đã giao", value: 24, note: "Tính đến ngày 21/04/2026", status: "Đã duyệt" },
+          { metric: "Đăng ký chờ duyệt", value: 7, note: "Cần xử lý trong ngày", status: "Chờ duyệt" },
+          { metric: "Hồ sơ bị từ chối", value: 2, note: "Cần bổ sung thông tin", status: "Từ chối" }
+        ],
+        detailMap: [
+          ["Chỉ tiêu", "metric"],
+          ["Giá trị", "value"],
+          ["Ghi chú", "note"],
+          ["Trạng thái", "status"]
+        ]
+      }
+    };
+
+    const openTabs = [];
+    let activeTab = null;
+    const selectedRowByTab = {};
+    const editingRowByTab = {};
+
+    function statusPill(status) {
+      if (!status) return "-";
+      const normalized = String(status).toLowerCase();
+      if (normalized.includes("da duyet") || normalized.includes("đã duyệt") || normalized.includes("đã giao")) {
+        return `<span class="pill green">${status}</span>`;
+      }
+      if (normalized.includes("chờ duyệt") || normalized.includes("cho duyet") || normalized.includes("chờ")) {
+        return `<span class="pill amber">${status}</span>`;
+      }
+      if (normalized.includes("từ chối") || normalized.includes("tu choi")) {
+        return `<span class="pill red">${status}</span>`;
+      }
+      return status;
+    }
+
+    function getEditableFields(tabKey) {
+      if (tabKey === "task137") return ["assigner", "receiver", "amount", "status"];
+      if (tabKey === "task138") return ["unit", "task", "amount", "status"];
+      if (tabKey === "task139") return ["reason", "officer"];
+      return ["value", "note", "status"];
+    }
+
+    function createDefaultRow(tabKey) {
+      if (tabKey === "task137") {
+        return {
+          id: "NV-137-" + String(Math.floor(Math.random() * 900 + 100)),
+          assigner: "Sở TNMT",
+          receiver: "Phòng TN huyện mới",
+          amount: 0,
+          status: "Chờ tiếp nhận",
+          timeline: "-",
+          note: "-"
+        };
+      }
+      if (tabKey === "task138") {
+        return {
+          id: "DK-138-" + String(Math.floor(Math.random() * 900 + 100)),
+          unit: "Đơn vị mới",
+          task: "Nhiệm vụ mới",
+          amount: 0,
+          status: "Chờ duyệt",
+          date: new Date().toLocaleDateString("vi-VN"),
+          note: "-"
+        };
+      }
+      if (tabKey === "task139") {
+        return {
+          id: "HS-139-" + String(Math.floor(Math.random() * 900 + 100)),
+          unit: "Đơn vị mới",
+          result: "Chờ duyệt",
+          reason: "",
+          officer: "",
+          status: "Chờ duyệt",
+          updated: new Date().toLocaleString("vi-VN")
+        };
+      }
+      return {
+        metric: "Chỉ tiêu mới",
+        value: 0,
+        note: "-",
+        status: "Chờ duyệt"
+      };
+    }
+
+    function syncRegistrationFromApproval(approvalRow) {
+      const registerRows = viewConfigs.task138.rows;
+      const target = registerRows.find((row) => row.id === approvalRow.id);
+      if (!target) return;
+      target.status = approvalRow.result;
+      target.note = approvalRow.result === "Từ chối" ? approvalRow.reason : "Đã duyệt bởi " + approvalRow.officer;
+    }
+
+    function syncApprovalFromRegistration(registrationRow) {
+      const approvalRows = viewConfigs.task139.rows;
+      const target = approvalRows.find((row) => row.id === registrationRow.id);
+      if (target) {
+        target.unit = registrationRow.unit;
+        target.result = registrationRow.status;
+        target.status = registrationRow.status;
+        if (registrationRow.status === "Từ chối") {
+          target.reason = registrationRow.note && registrationRow.note !== "-" ? registrationRow.note : "Chưa nhập lý do";
+        } else if (registrationRow.status === "Đã duyệt") {
+          target.reason = "-";
+        } else {
+          target.reason = "-";
+          target.officer = "-";
+        }
+        return;
+      }
+      approvalRows.push({
+        id: registrationRow.id,
+        unit: registrationRow.unit,
+        result: registrationRow.status,
+        reason: registrationRow.status === "Từ chối" ? (registrationRow.note || "Chưa nhập lý do") : "-",
+        officer: "-",
+        status: registrationRow.status,
+        updated: new Date().toLocaleString("vi-VN")
+      });
+    }
+
+    function removeApprovalByRegistrationId(registrationId) {
+      const rows = viewConfigs.task139.rows;
+      const idx = rows.findIndex((row) => row.id === registrationId);
+      if (idx >= 0) rows.splice(idx, 1);
+    }
+
+    function removeRegistrationByApprovalId(approvalId) {
+      const rows = viewConfigs.task138.rows;
+      const idx = rows.findIndex((row) => row.id === approvalId);
+      if (idx >= 0) rows.splice(idx, 1);
+    }
+
+    function refreshOverviewMetrics() {
+      const assignedCount = viewConfigs.task137.rows.length;
+      const registrationRows = viewConfigs.task138.rows;
+      const pendingCount = registrationRows.filter((row) => row.status === "Chờ duyệt").length;
+      const rejectedCount = registrationRows.filter((row) => row.status === "Từ chối").length;
+      viewConfigs.overview.rows = [
+        { metric: "Tổng nhiệm vụ đã giao", value: assignedCount, note: "Tự động theo danh sách giao nhiệm vụ", status: "Đã duyệt" },
+        { metric: "Đăng ký chờ duyệt", value: pendingCount, note: "Tự động theo danh sách đăng ký", status: "Chờ duyệt" },
+        { metric: "Hồ sơ bị từ chối", value: rejectedCount, note: "Tự động theo danh sách đăng ký", status: "Từ chối" }
+      ];
+    }
+
+    function renderTabs() {
+      const tabsNode = document.getElementById("tabs");
+      tabsNode.innerHTML = "";
+      openTabs.forEach((key) => {
+        const tab = document.createElement("div");
+        tab.className = "tab" + (key === activeTab ? " active" : "");
+        tab.innerHTML = `
+          <span>${viewConfigs[key].title}</span>
+          <span class="close" data-close="${key}">x</span>
+        `;
+        tab.addEventListener("click", (e) => {
+          if (e.target.dataset.close) return;
+          activeTab = key;
+          syncMenuState();
+          renderTabs();
+          renderPanel();
+        });
+        tab.querySelector(".close").addEventListener("click", (e) => {
+          e.stopPropagation();
+          closeTab(key);
+        });
+        tabsNode.appendChild(tab);
+      });
+    }
+
+    function renderPanel() {
+      const container = document.getElementById("panelContainer");
+      refreshOverviewMetrics();
+      if (!activeTab || !viewConfigs[activeTab]) {
+        container.innerHTML = `<div class="empty">Chọn chức năng bên trái để mở tab.</div>`;
+        return;
+      }
+
+      const cfg = viewConfigs[activeTab];
+      const rowIdx = selectedRowByTab[activeTab] ?? 0;
+      const selected = cfg.rows[rowIdx] || null;
+      const editingRowIdx = editingRowByTab[activeTab];
+      const editableFields = getEditableFields(activeTab);
+
+      const thead = `<tr>${cfg.columns.map((c) => `<th>${c}</th>`).join("")}</tr>`;
+      const rowsHtml = cfg.rows
+        .map((row, idx) => {
+          const rowClass = "selectable" + (idx === rowIdx ? " active" : "");
+          const isEditing = editingRowIdx === idx;
+          let cells = "";
+          if (activeTab === "task137") {
+            cells = `
+              <td>${row.id}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="assigner" value="${row.assigner}">` : row.assigner}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="receiver" value="${row.receiver}">` : row.receiver}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="amount" type="number" min="0" value="${row.amount}">` : row.amount}</td>
+              <td>${isEditing
+                ? `<select class="cell-select" data-field="status"><option ${row.status === "Đã giao" ? "selected" : ""}>Đã giao</option><option ${row.status === "Chờ tiếp nhận" ? "selected" : ""}>Chờ tiếp nhận</option></select>`
+                : statusPill(row.status)}</td>
+            `;
+          } else if (activeTab === "task138") {
+            cells = `
+              <td>${row.id}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="task" value="${row.task}">` : row.task}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="amount" type="number" min="0" value="${row.amount}">` : row.amount}</td>
+              <td>${isEditing
+                ? `<select class="cell-select" data-field="status"><option ${row.status === "Chờ duyệt" ? "selected" : ""}>Chờ duyệt</option><option ${row.status === "Đã duyệt" ? "selected" : ""}>Đã duyệt</option><option ${row.status === "Từ chối" ? "selected" : ""}>Từ chối</option></select>`
+                : statusPill(row.status)}</td>
+            `;
+          } else if (activeTab === "task139") {
+            cells = `
+              <td>${row.id}</td>
+              <td>${row.unit}</td>
+              <td>${statusPill(row.result)}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="reason" value="${row.reason || ""}">` : (row.reason || "-")}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="officer" value="${row.officer || ""}">` : (row.officer || "-")}</td>
+            `;
+          } else {
+            cells = `
+              <td>${row.metric}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="value" type="number" min="0" value="${row.value}">` : row.value}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="note" value="${row.note}">` : row.note}</td>
+            `;
+          }
+          return `<tr class="${rowClass}" data-index="${idx}">${cells}</tr>`;
+        })
+        .join("");
+
+      const detailHtml = selected
+        ? cfg.detailMap
+            .map(([label, key]) => {
+              const value = key === "status" || key === "result" ? statusPill(selected[key]) : (selected[key] ?? "-");
+              return `<div class="kv"><span>${label}</span><b>${value}</b></div>`;
+            })
+            .join("")
+        : `<div class="empty">Không có dữ liệu.</div>`;
+
+      const approvalHtml = activeTab === "task139" && selected
+        ? `
+          <div class="approval-box">
+            <div class="approval-grid">
+              <div class="approval-field">
+                <label>Lý do</label>
+                <input id="approveReason" value="${selected.reason && selected.reason !== "-" ? selected.reason : ""}" placeholder="Nhập lý do xử lý">
+              </div>
+              <div class="approval-field">
+                <label>Người duyệt / từ chối</label>
+                <input id="approveOfficer" value="${selected.officer || ""}" placeholder="Nhập tài khoản người xử lý">
+              </div>
+            </div>
+            <div class="toolbar" style="margin-top:8px;">
+              <button id="btnApprove" type="button" class="primary">Duyệt</button>
+              <button id="btnReject" type="button">Từ chối</button>
+            </div>
+          </div>
+        `
+        : "";
+
+      container.innerHTML = `
+        <div class="panel-head">
+          <b>${cfg.title}</b>
+          <div class="panel-head-right">
+            <small>Nhấn để xem thông tin chi tiết bên dưới</small>
+            <div class="toolbar">
+              <button id="btnAddRow" type="button">Thêm</button>
+              <button id="btnEditRow" type="button">Sửa</button>
+              <button id="btnSaveRow" type="button" class="primary">Lưu lại</button>
+              <button id="btnDeleteRow" type="button">Xóa</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <table>
+            <thead>${thead}</thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+          <div class="detail">
+            <div class="detail-head">Thông tin chi tiết</div>
+            <div class="detail-body">${detailHtml}</div>
+          </div>
+          ${approvalHtml}
+        </div>
+      `;
+
+      container.querySelectorAll("tr.selectable").forEach((tr) => {
+        tr.addEventListener("click", () => {
+          if (editingRowByTab[activeTab] !== undefined) return;
+          selectedRowByTab[activeTab] = Number(tr.dataset.index);
+          renderPanel();
+        });
+      });
+
+      container.querySelectorAll(".cell-input, .cell-select").forEach((el) => {
+        el.addEventListener("click", (e) => e.stopPropagation());
+        el.addEventListener("mousedown", (e) => e.stopPropagation());
+      });
+
+      const btnAddRow = container.querySelector("#btnAddRow");
+      const btnEditRow = container.querySelector("#btnEditRow");
+      const btnSaveRow = container.querySelector("#btnSaveRow");
+      const btnDeleteRow = container.querySelector("#btnDeleteRow");
+
+      btnAddRow.addEventListener("click", () => {
+        const newRow = createDefaultRow(activeTab);
+        cfg.rows.push(newRow);
+        if (activeTab === "task138") syncApprovalFromRegistration(newRow);
+        selectedRowByTab[activeTab] = cfg.rows.length - 1;
+        editingRowByTab[activeTab] = cfg.rows.length - 1;
+        renderPanel();
+      });
+
+      btnEditRow.addEventListener("click", () => {
+        if (!selected) {
+          alert("Vui lòng chọn 1 dòng để sửa.");
+          return;
+        }
+        editingRowByTab[activeTab] = rowIdx;
+        renderPanel();
+      });
+
+      btnSaveRow.addEventListener("click", () => {
+        const editIdx = editingRowByTab[activeTab];
+        if (editIdx === undefined) {
+          alert("Chưa ở chế độ sửa.");
+          return;
+        }
+        const targetRow = cfg.rows[editIdx];
+        if (!targetRow) return;
+        const editRowEl = container.querySelector(`tr[data-index="${editIdx}"]`);
+        editableFields.forEach((field) => {
+          const input = editRowEl.querySelector(`[data-field="${field}"]`);
+          if (!input) return;
+          targetRow[field] = input.value;
+        });
+        if (targetRow.amount !== undefined) targetRow.amount = Number(targetRow.amount || 0);
+        if (activeTab === "task138") syncApprovalFromRegistration(targetRow);
+        delete editingRowByTab[activeTab];
+        renderPanel();
+      });
+
+      btnDeleteRow.addEventListener("click", () => {
+        if (!selected) {
+          alert("Vui lòng chọn 1 dòng để xóa.");
+          return;
+        }
+        if (!confirm("Xác nhận xóa bản ghi đang chọn?")) return;
+        if (activeTab === "task138") removeApprovalByRegistrationId(selected.id);
+        if (activeTab === "task139") removeRegistrationByApprovalId(selected.id);
+        cfg.rows.splice(rowIdx, 1);
+        selectedRowByTab[activeTab] = 0;
+        delete editingRowByTab[activeTab];
+        renderPanel();
+      });
+
+      if (activeTab === "task139" && selected) {
+        const btnApprove = container.querySelector("#btnApprove");
+        const btnReject = container.querySelector("#btnReject");
+        btnApprove.addEventListener("click", () => {
+          const reason = container.querySelector("#approveReason").value.trim();
+          const officer = container.querySelector("#approveOfficer").value.trim();
+          if (!reason || !officer) {
+            alert("Vui lòng nhập đủ lý do và người duyệt/từ chối.");
+            return;
+          }
+          selected.result = "Đã duyệt";
+          selected.status = "Đã duyệt";
+          selected.reason = reason;
+          selected.officer = officer;
+          selected.updated = new Date().toLocaleString("vi-VN");
+          syncRegistrationFromApproval(selected);
+          refreshOverviewMetrics();
+          renderPanel();
+        });
+
+        btnReject.addEventListener("click", () => {
+          const reason = container.querySelector("#approveReason").value.trim();
+          const officer = container.querySelector("#approveOfficer").value.trim();
+          if (!reason || !officer) {
+            alert("Vui lòng nhập đủ lý do và người duyệt/từ chối.");
+            return;
+          }
+          selected.result = "Từ chối";
+          selected.status = "Từ chối";
+          selected.reason = reason;
+          selected.officer = officer;
+          selected.updated = new Date().toLocaleString("vi-VN");
+          syncRegistrationFromApproval(selected);
+          refreshOverviewMetrics();
+          renderPanel();
+        });
+      }
+    }
+
+    function syncMenuState() {
+      document.querySelectorAll(".menu-item").forEach((item) => {
+        item.classList.toggle("active", item.dataset.view === activeTab);
+      });
+    }
+
+    function openTab(key) {
+      if (!viewConfigs[key]) return;
+      if (!openTabs.includes(key)) openTabs.push(key);
+      if (selectedRowByTab[key] === undefined) selectedRowByTab[key] = 0;
+      activeTab = key;
+      syncMenuState();
+      renderTabs();
+      renderPanel();
+    }
+
+    function closeTab(key) {
+      const idx = openTabs.indexOf(key);
+      if (idx >= 0) openTabs.splice(idx, 1);
+      if (activeTab === key) {
+        activeTab = openTabs.length ? openTabs[openTabs.length - 1] : null;
+      }
+      syncMenuState();
+      renderTabs();
+      renderPanel();
+    }
+
+    document.querySelectorAll(".menu-item").forEach((btn) => {
+      btn.addEventListener("click", () => openTab(btn.dataset.view));
+    });
+
+    function updateClock() {
+      document.getElementById("clock").textContent = new Date().toLocaleString("vi-VN");
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    openTab("task137");
+  </script>
+</body>
+</html>
