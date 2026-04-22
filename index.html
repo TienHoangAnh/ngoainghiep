@@ -24,6 +24,18 @@
       <button class="menu-item" data-view="report44">Báo cáo thống kê số liệu thu thập theo tuần so với nhiệm vụ và đăng ký</button>
       <button class="menu-item" data-view="report45">Báo cáo thống kê số liệu thu thập theo tháng so với nhiệm vụ và đăng ký</button>
       <button class="menu-item" data-view="report46">Báo cáo thống kê số liệu thu thập theo quí so với nhiệm vụ và đăng ký</button>
+
+      <div class="menu-group-title">Chức năng tổng hợp thông tin công tác thu thập dữ liệu</div>
+      <button class="menu-item" data-view="report103">Tổng hợp tình hình thu thập dữ liệu ngoại nghiệp theo công việc</button>
+      <button class="menu-item" data-view="report104">104. Tổng hợp dữ liệu bản đồ lưới điện theo số liệu thu thập</button>
+      <button class="menu-item" data-view="report105">Tổng hợp số liệu theo ngày so với nhiệm vụ và đăng ký kế hoạch</button>
+      <button class="menu-item" data-view="report106">Tổng hợp số liệu theo tuần so với nhiệm vụ và đăng ký kế hoạch</button>
+      <button class="menu-item" data-view="report107">Tổng hợp số liệu theo tháng so với nhiệm vụ và đăng ký kế hoạch</button>
+      <button class="menu-item" data-view="report108">Tổng hợp số liệu theo quý so với nhiệm vụ và đăng ký kế hoạch</button>
+
+      <div class="menu-group-title">Chức năng đồng bộ dữ liệu</div>
+      <button class="menu-item" data-view="report109">Thiết lập tải bản đồ nền ngoại tuyến theo quyền hạn</button>
+      <button class="menu-item" data-view="report110">Thiết lập tải dữ liệu bản đồ lưới điện ngoại tuyến theo quyền hạn</button>
     </aside>
 
     <section class="main">
@@ -350,6 +362,247 @@
           ["Số liệu đăng ký", "registeredData"],
           ["Đơn vị tính", "calcUnit"]
         ]
+      },
+      report103: {
+        title: "Tổng hợp tình hình thu thập dữ liệu ngoại nghiệp theo công việc",
+        columns: [
+          "Stt",
+          "Loại Công Việc",
+          "Khoảng Thời Gian",
+          "Số liệu thu thập mới",
+          "Số liệu đang thu thập",
+          "Số liệu chưa thu thập"
+        ],
+        rows: [
+          { stt: 1, workType: "Thu thập mới", period: "01/01/2026 - 31/01/2026", completedCount: 120, inProgressCount: 15, notCollectedCount: 8 },
+          { stt: 2, workType: "Chuẩn hóa lại", period: "01/02/2026 - 29/02/2026", completedCount: 84, inProgressCount: 11, notCollectedCount: 6 },
+          { stt: 3, workType: "Định vị lại", period: "01/03/2026 - 31/03/2026", completedCount: 66, inProgressCount: 9, notCollectedCount: 4 }
+        ],
+        detailMap: [
+          ["Stt", "stt"],
+          ["Loại Công Việc", "workType"],
+          ["Khoảng Thời Gian", "period"],
+          ["Số liệu thu thập mới", "completedCount"],
+          ["Số liệu đang thu thập", "inProgressCount"],
+          ["Số liệu chưa thu thập", "notCollectedCount"]
+        ]
+      },
+      report104: {
+        title: "Tổng hợp dữ liệu bản đồ lưới điện theo số liệu thu thập",
+        columns: [
+          "Stt",
+          "Mã đối tượng",
+          "Loại đối tượng",
+          "Tọa độ",
+          "Thông tin kỹ thuật",
+          "Đơn vị quản lý",
+          "Ảnh",
+          "Trạng thái"
+        ],
+        rows: [
+          {
+            stt: 1,
+            objectCode: "CD-001",
+            objectType: "Cột điện",
+            coordinate: "21.0285, 105.8542",
+            technicalInfo: "22kV - BTCT - Cao 12m",
+            managerUnit: "PC Hà Nội",
+            imageName: "cot-dien-001.jpg",
+            status: "Đã thu thập"
+          },
+          {
+            stt: 2,
+            objectCode: "TBA-013",
+            objectType: "Trạm biến áp",
+            coordinate: "21.0351, 105.8218",
+            technicalInfo: "560kVA - 22/0.4kV",
+            managerUnit: "PC Hà Nội",
+            imageName: "tba-013.jpg",
+            status: "Đang cập nhật"
+          }
+        ],
+        detailMap: [
+          ["Stt", "stt"],
+          ["Mã đối tượng", "objectCode"],
+          ["Loại đối tượng", "objectType"],
+          ["Tọa độ", "coordinate"],
+          ["Thông tin kỹ thuật", "technicalInfo"],
+          ["Đơn vị quản lý", "managerUnit"],
+          ["Ảnh", "imageName"],
+          ["Trạng thái", "status"]
+        ]
+      },
+      report105: {
+        title: "Tổng hợp thông tin số liệu thu thập theo ngày so với nhiệm vụ và đăng ký kế hoạch",
+        reportMeta: {
+          title: "TỔNG HỢP THÔNG TIN SỐ LIỆU THU THẬP THEO NGÀY SO VỚI NHIỆM VỤ VÀ ĐĂNG KÝ KẾ HOẠCH",
+          unit: "A",
+          fromDate: "01/04/2026",
+          toDate: "30/04/2026"
+        },
+        columns: [
+          "STT",
+          "Đơn vị",
+          "Ngày",
+          "Đối tượng",
+          "Số liệu thu thập mới",
+          "Số liệu lũy kế theo ngày",
+          "Số liệu giao",
+          "Số liệu đăng ký",
+          "Đơn vị tính"
+        ],
+        rows: [
+          { stt: "1", unit: "A", date: "01/04/2026", object: "Cột điện", collectedNew: "10", cumulativeByDate: "100", assignedData: "1000", registeredData: "900", calcUnit: "cột" },
+          { stt: "2", unit: "A", date: "01/04/2026", object: "Trạm biến áp", collectedNew: "6", cumulativeByDate: "60", assignedData: "500", registeredData: "450", calcUnit: "trạm" }
+        ],
+        detailMap: [
+          ["STT", "stt"],
+          ["Đơn vị", "unit"],
+          ["Ngày", "date"],
+          ["Đối tượng", "object"],
+          ["Số liệu thu thập mới", "collectedNew"],
+          ["Số liệu lũy kế theo ngày", "cumulativeByDate"],
+          ["Số liệu giao", "assignedData"],
+          ["Số liệu đăng ký", "registeredData"],
+          ["Đơn vị tính", "calcUnit"]
+        ]
+      },
+      report106: {
+        title: "Tổng hợp thông tin số liệu thu thập theo tuần so với nhiệm vụ và đăng ký kế hoạch",
+        reportMeta: {
+          title: "TỔNG HỢP THÔNG TIN SỐ LIỆU THU THẬP THEO TUẦN SO VỚI NHIỆM VỤ VÀ ĐĂNG KÝ KẾ HOẠCH",
+          unit: "A",
+          fromWeek: "Tuần 1/04/2026",
+          toWeek: "Tuần 4/04/2026"
+        },
+        columns: [
+          "STT",
+          "Đơn vị",
+          "(Tuần)",
+          "Đối tượng",
+          "Số liệu thu thập mới",
+          "Số liệu lũy kế theo tuần",
+          "Số liệu giao",
+          "Số liệu đăng ký",
+          "Đơn vị tính"
+        ],
+        rows: [
+          { stt: "1", unit: "A", week: "Tuần 1/04/2026", object: "Cột điện", collectedNew: "15", cumulativeByWeek: "120", assignedData: "1000", registeredData: "900", calcUnit: "cột" },
+          { stt: "2", unit: "A", week: "Tuần 1/04/2026", object: "Trạm biến áp", collectedNew: "8", cumulativeByWeek: "70", assignedData: "600", registeredData: "560", calcUnit: "trạm" }
+        ],
+        detailMap: [
+          ["STT", "stt"],
+          ["Đơn vị", "unit"],
+          ["(Tuần)", "week"],
+          ["Đối tượng", "object"],
+          ["Số liệu thu thập mới", "collectedNew"],
+          ["Số liệu lũy kế theo tuần", "cumulativeByWeek"],
+          ["Số liệu giao", "assignedData"],
+          ["Số liệu đăng ký", "registeredData"],
+          ["Đơn vị tính", "calcUnit"]
+        ]
+      },
+      report107: {
+        title: "Tổng hợp thông tin số liệu thu thập theo tháng so với nhiệm vụ và đăng ký kế hoạch",
+        reportMeta: {
+          title: "TỔNG HỢP THÔNG TIN SỐ LIỆU THU THẬP THEO THÁNG SO VỚI NHIỆM VỤ VÀ ĐĂNG KÝ KẾ HOẠCH",
+          unit: "A",
+          fromMonth: "01/2026",
+          toMonth: "04/2026"
+        },
+        columns: [
+          "STT",
+          "Đơn vị",
+          "Tháng",
+          "Đối tượng",
+          "Số liệu thu thập mới",
+          "Số liệu lũy kế theo tháng",
+          "Số liệu giao",
+          "Số liệu đăng ký",
+          "Đơn vị tính"
+        ],
+        rows: [
+          { stt: "1", unit: "A", month: "04/2026", object: "Cột điện", collectedNew: "35", cumulativeByMonth: "220", assignedData: "1000", registeredData: "900", calcUnit: "cột" },
+          { stt: "2", unit: "A", month: "04/2026", object: "Trạm biến áp", collectedNew: "14", cumulativeByMonth: "120", assignedData: "600", registeredData: "560", calcUnit: "trạm" }
+        ],
+        detailMap: [
+          ["STT", "stt"],
+          ["Đơn vị", "unit"],
+          ["Tháng", "month"],
+          ["Đối tượng", "object"],
+          ["Số liệu thu thập mới", "collectedNew"],
+          ["Số liệu lũy kế theo tháng", "cumulativeByMonth"],
+          ["Số liệu giao", "assignedData"],
+          ["Số liệu đăng ký", "registeredData"],
+          ["Đơn vị tính", "calcUnit"]
+        ]
+      },
+      report108: {
+        title: "Tổng hợp thông tin số liệu thu thập theo quý so với nhiệm vụ và đăng ký kế hoạch",
+        reportMeta: {
+          title: "TỔNG HỢP THÔNG TIN SỐ LIỆU THU THẬP THEO QUÝ SO VỚI NHIỆM VỤ VÀ ĐĂNG KÝ KẾ HOẠCH",
+          unit: "A"
+        },
+        columns: [
+          "STT",
+          "Đơn vị",
+          "Quý",
+          "Đối tượng",
+          "Số liệu thu thập mới",
+          "Số liệu lũy kế theo quý",
+          "Số liệu giao",
+          "Số liệu đăng ký",
+          "Đơn vị tính"
+        ],
+        rows: [
+          { stt: "1", unit: "A", quarter: "Quý I/2026", object: "Cột điện", collectedNew: "100", cumulativeByQuarter: "500", assignedData: "3000", registeredData: "2800", calcUnit: "cột" },
+          { stt: "2", unit: "A", quarter: "Quý I/2026", object: "Trạm biến áp", collectedNew: "45", cumulativeByQuarter: "200", assignedData: "1200", registeredData: "1100", calcUnit: "trạm" }
+        ],
+        detailMap: [
+          ["STT", "stt"],
+          ["Đơn vị", "unit"],
+          ["Quý", "quarter"],
+          ["Đối tượng", "object"],
+          ["Số liệu thu thập mới", "collectedNew"],
+          ["Số liệu lũy kế theo quý", "cumulativeByQuarter"],
+          ["Số liệu giao", "assignedData"],
+          ["Số liệu đăng ký", "registeredData"],
+          ["Đơn vị tính", "calcUnit"]
+        ]
+      },
+      report109: {
+        title: "Thiết lập tải bản đồ nền ngoại tuyến theo quyền hạn",
+        columns: ["Stt", "Người dùng", "Phạm vi tải", "Lớp bản đồ nền", "Dung lượng (MB)", "Trạng thái tải"],
+        rows: [
+          { stt: 1, username: "npc.a", scope: "Quận Ba Đình", mapLayer: "Bản đồ địa hình", dataSizeMb: 256, downloadStatus: "Đã sẵn sàng", updatedAt: "22/04/2026 09:15" },
+          { stt: 2, username: "pc.hn01", scope: "Quận Hoàn Kiếm", mapLayer: "Bản đồ vệ tinh", dataSizeMb: 412, downloadStatus: "Đang xử lý", updatedAt: "22/04/2026 10:02" }
+        ],
+        detailMap: [
+          ["Stt", "stt"],
+          ["Người dùng", "username"],
+          ["Phạm vi tải", "scope"],
+          ["Lớp bản đồ nền", "mapLayer"],
+          ["Dung lượng (MB)", "dataSizeMb"],
+          ["Trạng thái tải", "downloadStatus"],
+          ["Cập nhật lúc", "updatedAt"]
+        ]
+      },
+      report110: {
+        title: "Thiết lập tải dữ liệu bản đồ lưới điện ngoại tuyến theo quyền hạn",
+        columns: ["Stt", "Người dùng", "Phạm vi tải", "Đối tượng lưới điện", "Dung lượng (MB)", "Trạng thái tải"],
+        rows: [
+          { stt: 1, username: "npc.b", scope: "Huyện Đông Anh", gridObject: "Cột điện + Trạm biến áp", dataSizeMb: 530, downloadStatus: "Đã sẵn sàng", updatedAt: "22/04/2026 08:45" },
+          { stt: 2, username: "pc.hn02", scope: "Huyện Gia Lâm", gridObject: "Đường dây trung thế", dataSizeMb: 288, downloadStatus: "Đang xử lý", updatedAt: "22/04/2026 10:20" }
+        ],
+        detailMap: [
+          ["Stt", "stt"],
+          ["Người dùng", "username"],
+          ["Phạm vi tải", "scope"],
+          ["Đối tượng lưới điện", "gridObject"],
+          ["Dung lượng (MB)", "dataSizeMb"],
+          ["Trạng thái tải", "downloadStatus"],
+          ["Cập nhật lúc", "updatedAt"]
+        ]
       }
     };
 
@@ -357,6 +610,7 @@
     let activeTab = null;
     const selectedRowByTab = {};
     const editingRowByTab = {};
+    const reportFilterByTab = {};
 
     function statusPill(status) {
       if (!status) return "-";
@@ -374,6 +628,14 @@
     }
 
     function getEditableFields(tabKey) {
+      if (tabKey === "report103") return ["workType", "period", "completedCount", "inProgressCount", "notCollectedCount"];
+      if (tabKey === "report104") return ["objectCode", "objectType", "coordinate", "technicalInfo", "managerUnit", "imageName", "status"];
+      if (tabKey === "report105") return ["unit", "date", "object", "collectedNew", "cumulativeByDate", "assignedData", "registeredData", "calcUnit"];
+      if (tabKey === "report106") return ["unit", "week", "object", "collectedNew", "cumulativeByWeek", "assignedData", "registeredData", "calcUnit"];
+      if (tabKey === "report107") return ["unit", "month", "object", "collectedNew", "cumulativeByMonth", "assignedData", "registeredData", "calcUnit"];
+      if (tabKey === "report108") return ["unit", "quarter", "object", "collectedNew", "cumulativeByQuarter", "assignedData", "registeredData", "calcUnit"];
+      if (tabKey === "report109") return ["username", "scope", "mapLayer", "dataSizeMb", "downloadStatus"];
+      if (tabKey === "report110") return ["username", "scope", "gridObject", "dataSizeMb", "downloadStatus"];
       if (tabKey === "task137") return ["assigner", "receiver", "amount", "status"];
       if (tabKey === "task138") return ["unit", "task", "amount", "status"];
       if (tabKey === "task139") return ["reason", "officer"];
@@ -430,6 +692,16 @@
           notCollectedCount: 0
         };
       }
+      if (tabKey === "report103") {
+        return {
+          stt: viewConfigs.report103.rows.length + 1,
+          workType: "Loại công việc mới",
+          period: "-",
+          completedCount: 0,
+          inProgressCount: 0,
+          notCollectedCount: 0
+        };
+      }
       if (tabKey === "report42") {
         return {
           stt: viewConfigs.report42.rows.length + 1,
@@ -440,9 +712,34 @@
           notCollectedCount: 0
         };
       }
+      if (tabKey === "report104") {
+        return {
+          stt: viewConfigs.report104.rows.length + 1,
+          objectCode: "OBJ-" + String(Math.floor(Math.random() * 900 + 100)),
+          objectType: "Đối tượng lưới điện",
+          coordinate: "0.0000, 0.0000",
+          technicalInfo: "-",
+          managerUnit: "Đơn vị quản lý",
+          imageName: "anh-moi.jpg",
+          status: "Đang cập nhật"
+        };
+      }
       if (tabKey === "report43") {
         return {
           stt: String(viewConfigs.report43.rows.length + 1),
+          unit: "A",
+          date: new Date().toLocaleDateString("vi-VN"),
+          object: "Đối tượng mới",
+          collectedNew: "0",
+          cumulativeByDate: "0",
+          assignedData: "0",
+          registeredData: "0",
+          calcUnit: "-"
+        };
+      }
+      if (tabKey === "report105") {
+        return {
+          stt: String(viewConfigs.report105.rows.length + 1),
           unit: "A",
           date: new Date().toLocaleDateString("vi-VN"),
           object: "Đối tượng mới",
@@ -466,9 +763,35 @@
           calcUnit: "-"
         };
       }
+      if (tabKey === "report106") {
+        return {
+          stt: String(viewConfigs.report106.rows.length + 1),
+          unit: "A",
+          week: "",
+          object: "Đối tượng mới",
+          collectedNew: "0",
+          cumulativeByWeek: "0",
+          assignedData: "0",
+          registeredData: "0",
+          calcUnit: "-"
+        };
+      }
       if (tabKey === "report45") {
         return {
           stt: String(viewConfigs.report45.rows.length + 1),
+          unit: "A",
+          month: "",
+          object: "Đối tượng mới",
+          collectedNew: "0",
+          cumulativeByMonth: "0",
+          assignedData: "0",
+          registeredData: "0",
+          calcUnit: "-"
+        };
+      }
+      if (tabKey === "report107") {
+        return {
+          stt: String(viewConfigs.report107.rows.length + 1),
           unit: "A",
           month: "",
           object: "Đối tượng mới",
@@ -490,6 +813,41 @@
           assignedData: "0",
           registeredData: "0",
           calcUnit: "-"
+        };
+      }
+      if (tabKey === "report108") {
+        return {
+          stt: String(viewConfigs.report108.rows.length + 1),
+          unit: "A",
+          quarter: "",
+          object: "Đối tượng mới",
+          collectedNew: "0",
+          cumulativeByQuarter: "0",
+          assignedData: "0",
+          registeredData: "0",
+          calcUnit: "-"
+        };
+      }
+      if (tabKey === "report109") {
+        return {
+          stt: viewConfigs.report109.rows.length + 1,
+          username: "user.moi",
+          scope: "Phạm vi mới",
+          mapLayer: "Bản đồ nền",
+          dataSizeMb: 0,
+          downloadStatus: "Đang xử lý",
+          updatedAt: new Date().toLocaleString("vi-VN")
+        };
+      }
+      if (tabKey === "report110") {
+        return {
+          stt: viewConfigs.report110.rows.length + 1,
+          username: "user.moi",
+          scope: "Phạm vi mới",
+          gridObject: "Đối tượng lưới điện",
+          dataSizeMb: 0,
+          downloadStatus: "Đang xử lý",
+          updatedAt: new Date().toLocaleString("vi-VN")
         };
       }
       return {
@@ -566,8 +924,9 @@
       openTabs.forEach((key) => {
         const tab = document.createElement("div");
         tab.className = "tab" + (key === activeTab ? " active" : "");
+        const tabTitle = viewConfigs[key].title;
         tab.innerHTML = `
-          <span>${viewConfigs[key].title}</span>
+          <span class="tab-title" title="${tabTitle}">${tabTitle}</span>
           <span class="close" data-close="${key}">x</span>
         `;
         tab.addEventListener("click", (e) => {
@@ -585,6 +944,112 @@
       });
     }
 
+    function getExportFieldOrder(tabKey) {
+      if (tabKey === "report103") {
+        return ["stt", "workType", "period", "completedCount", "inProgressCount", "notCollectedCount"];
+      }
+      if (tabKey === "report104") {
+        return ["stt", "objectCode", "objectType", "coordinate", "technicalInfo", "managerUnit", "imageName", "status"];
+      }
+      if (tabKey === "report105") {
+        return ["stt", "unit", "date", "object", "collectedNew", "cumulativeByDate", "assignedData", "registeredData", "calcUnit"];
+      }
+      if (tabKey === "report106") {
+        return ["stt", "unit", "week", "object", "collectedNew", "cumulativeByWeek", "assignedData", "registeredData", "calcUnit"];
+      }
+      if (tabKey === "report107") {
+        return ["stt", "unit", "month", "object", "collectedNew", "cumulativeByMonth", "assignedData", "registeredData", "calcUnit"];
+      }
+      if (tabKey === "report108") {
+        return ["stt", "unit", "quarter", "object", "collectedNew", "cumulativeByQuarter", "assignedData", "registeredData", "calcUnit"];
+      }
+      if (tabKey === "report109") {
+        return ["stt", "username", "scope", "mapLayer", "dataSizeMb", "downloadStatus"];
+      }
+      if (tabKey === "report110") {
+        return ["stt", "username", "scope", "gridObject", "dataSizeMb", "downloadStatus"];
+      }
+      return [];
+    }
+
+    function normalizeExportCell(value) {
+      if (value === null || value === undefined) return "";
+      return String(value).replace(/"/g, '""');
+    }
+
+    function exportCurrentTabToExcel(tabKey) {
+      const cfg = viewConfigs[tabKey];
+      if (!cfg) return;
+      const fields = getExportFieldOrder(tabKey);
+      if (!fields.length) {
+        alert("Chức năng này chưa hỗ trợ xuất Excel.");
+        return;
+      }
+      const lines = [];
+      lines.push(cfg.columns.map((col) => `"${normalizeExportCell(col)}"`).join(","));
+      cfg.rows.forEach((row) => {
+        const values = fields.map((field) => `"${normalizeExportCell(row[field])}"`);
+        lines.push(values.join(","));
+      });
+      const csvContent = "\uFEFF" + lines.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${tabKey}-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function exportCurrentTabToPdf(tabKey) {
+      const cfg = viewConfigs[tabKey];
+      if (!cfg) return;
+      const fields = getExportFieldOrder(tabKey);
+      if (!fields.length) {
+        alert("Chức năng này chưa hỗ trợ xuất PDF.");
+        return;
+      }
+      const headerHtml = cfg.columns.map((col) => `<th>${col}</th>`).join("");
+      const bodyHtml = cfg.rows
+        .map((row) => {
+          const tds = fields.map((field) => `<td>${row[field] ?? ""}</td>`).join("");
+          return `<tr>${tds}</tr>`;
+        })
+        .join("");
+      const popup = window.open("", "_blank", "width=1200,height=800");
+      if (!popup) {
+        alert("Trình duyệt đang chặn cửa sổ in PDF. Vui lòng cho phép popup và thử lại.");
+        return;
+      }
+      popup.document.write(`
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>${cfg.title}</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 16px; }
+              h2 { margin: 0 0 10px; font-size: 18px; }
+              table { width: 100%; border-collapse: collapse; font-size: 12px; }
+              th, td { border: 1px solid #d3dbe5; padding: 6px; text-align: left; }
+              th { background: #eef4fb; }
+            </style>
+          </head>
+          <body>
+            <h2>${cfg.title}</h2>
+            <table>
+              <thead><tr>${headerHtml}</tr></thead>
+              <tbody>${bodyHtml}</tbody>
+            </table>
+          </body>
+        </html>
+      `);
+      popup.document.close();
+      popup.focus();
+      popup.print();
+    }
+
     function renderPanel() {
       const container = document.getElementById("panelContainer");
       refreshOverviewMetrics();
@@ -594,13 +1059,26 @@
       }
 
       const cfg = viewConfigs[activeTab];
+      let filteredRows = cfg.rows;
+      if (activeTab === "report105" && reportFilterByTab.report105) {
+        filteredRows = cfg.rows.filter((row) => row.date === reportFilterByTab.report105);
+      }
+      if (activeTab === "report106" && reportFilterByTab.report106) {
+        filteredRows = cfg.rows.filter((row) => row.week === reportFilterByTab.report106);
+      }
+      if (activeTab === "report107" && reportFilterByTab.report107) {
+        filteredRows = cfg.rows.filter((row) => row.month === reportFilterByTab.report107);
+      }
+      if (activeTab === "report108" && reportFilterByTab.report108) {
+        filteredRows = cfg.rows.filter((row) => row.quarter === reportFilterByTab.report108);
+      }
       const rowIdx = selectedRowByTab[activeTab] ?? 0;
-      const selected = cfg.rows[rowIdx] || null;
+      const selected = filteredRows[rowIdx] || null;
       const editingRowIdx = editingRowByTab[activeTab];
       const editableFields = getEditableFields(activeTab);
 
       const thead = `<tr>${cfg.columns.map((c) => `<th>${c}</th>`).join("")}</tr>`;
-      const rowsHtml = cfg.rows
+      const rowsHtml = filteredRows
         .map((row, idx) => {
           const rowClass = "selectable" + (idx === rowIdx ? " active" : "") + (row.isTotal ? " total-row" : "");
           const isEditing = editingRowIdx === idx;
@@ -642,6 +1120,15 @@
               <td>${isEditing ? `<input class="cell-input" data-field="inProgressCount" type="number" min="0" value="${row.inProgressCount}">` : row.inProgressCount}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="notCollectedCount" type="number" min="0" value="${row.notCollectedCount}">` : row.notCollectedCount}</td>
             `;
+          } else if (activeTab === "report103") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="workType" value="${row.workType}">` : row.workType}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="period" value="${row.period}">` : row.period}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="completedCount" type="number" min="0" value="${row.completedCount}">` : row.completedCount}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="inProgressCount" type="number" min="0" value="${row.inProgressCount}">` : row.inProgressCount}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="notCollectedCount" type="number" min="0" value="${row.notCollectedCount}">` : row.notCollectedCount}</td>
+            `;
           } else if (activeTab === "report42") {
             cells = `
               <td>${row.stt}</td>
@@ -651,7 +1138,18 @@
               <td>${isEditing ? `<input class="cell-input" data-field="inProgressCount" type="number" min="0" value="${row.inProgressCount}">` : row.inProgressCount}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="notCollectedCount" type="number" min="0" value="${row.notCollectedCount}">` : row.notCollectedCount}</td>
             `;
-          } else if (activeTab === "report43") {
+          } else if (activeTab === "report104") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="objectCode" value="${row.objectCode}">` : row.objectCode}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="objectType" value="${row.objectType}">` : row.objectType}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="coordinate" value="${row.coordinate}">` : row.coordinate}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="technicalInfo" value="${row.technicalInfo}">` : row.technicalInfo}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="managerUnit" value="${row.managerUnit}">` : row.managerUnit}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="imageName" value="${row.imageName}">` : row.imageName}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="status" value="${row.status}">` : row.status}</td>
+            `;
+          } else if (activeTab === "report43" || activeTab === "report105") {
             cells = `
               <td>${row.stt}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
@@ -663,7 +1161,7 @@
               <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
             `;
-          } else if (activeTab === "report44") {
+          } else if (activeTab === "report44" || activeTab === "report106") {
             cells = `
               <td>${row.stt}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
@@ -675,7 +1173,7 @@
               <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
             `;
-          } else if (activeTab === "report45") {
+          } else if (activeTab === "report45" || activeTab === "report107") {
             cells = `
               <td>${row.stt}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
@@ -687,7 +1185,7 @@
               <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
             `;
-          } else if (activeTab === "report46") {
+          } else if (activeTab === "report46" || activeTab === "report108") {
             cells = `
               <td>${row.stt}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
@@ -698,6 +1196,24 @@
               <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
+            `;
+          } else if (activeTab === "report109") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="username" value="${row.username}">` : row.username}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="scope" value="${row.scope}">` : row.scope}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="mapLayer" value="${row.mapLayer}">` : row.mapLayer}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="dataSizeMb" type="number" min="0" value="${row.dataSizeMb}">` : row.dataSizeMb}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="downloadStatus" value="${row.downloadStatus}">` : row.downloadStatus}</td>
+            `;
+          } else if (activeTab === "report110") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="username" value="${row.username}">` : row.username}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="scope" value="${row.scope}">` : row.scope}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="gridObject" value="${row.gridObject}">` : row.gridObject}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="dataSizeMb" type="number" min="0" value="${row.dataSizeMb}">` : row.dataSizeMb}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="downloadStatus" value="${row.downloadStatus}">` : row.downloadStatus}</td>
             `;
           } else {
             cells = `
@@ -740,7 +1256,7 @@
         `
         : "";
 
-      const report43MetaHtml = activeTab === "report43"
+      const report43MetaHtml = activeTab === "report43" || activeTab === "report105"
         ? `
           <div class="detail" style="margin-bottom:10px;">
             <div class="detail-body" style="display:block;">
@@ -756,7 +1272,7 @@
           </div>
         `
         : "";
-      const report44MetaHtml = activeTab === "report44"
+      const report44MetaHtml = activeTab === "report44" || activeTab === "report106"
         ? `
           <div class="detail" style="margin-bottom:10px;">
             <div class="detail-body" style="display:block;">
@@ -772,7 +1288,7 @@
           </div>
         `
         : "";
-      const report45MetaHtml = activeTab === "report45"
+      const report45MetaHtml = activeTab === "report45" || activeTab === "report107"
         ? `
           <div class="detail" style="margin-bottom:10px;">
             <div class="detail-body" style="display:block;">
@@ -788,7 +1304,7 @@
           </div>
         `
         : "";
-      const report46MetaHtml = activeTab === "report46"
+      const report46MetaHtml = activeTab === "report46" || activeTab === "report108"
         ? `
           <div class="detail" style="margin-bottom:10px;">
             <div class="detail-body" style="display:block;">
@@ -802,7 +1318,117 @@
           </div>
         `
         : "";
-      const showCrud = activeTab !== "report43" && activeTab !== "report44" && activeTab !== "report45" && activeTab !== "report46";
+      const report105FilterHtml = activeTab === "report105"
+        ? `
+          <div class="detail" style="margin-bottom:10px;">
+            <div class="detail-body" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <label for="report105DateFilter"><b>Chọn ngày:</b></label>
+                <select id="report105DateFilter" class="cell-select" style="min-width:180px;">
+                  <option value="">Tất cả</option>
+                  ${Array.from(new Set(cfg.rows.map((row) => row.date)))
+                    .map((date) => `<option value="${date}" ${reportFilterByTab.report105 === date ? "selected" : ""}>${date}</option>`)
+                    .join("")}
+                </select>
+              </div>
+              <div class="toolbar">
+                <button id="btnApplyReport105Filter" type="button">Xem thông tin</button>
+                <button id="btnClearReport105Filter" type="button">Bỏ lọc</button>
+                <button id="btnExportExcel" type="button">Xuất Excel</button>
+                <button id="btnExportPdf" type="button">Xuất PDF</button>
+              </div>
+            </div>
+          </div>
+        `
+        : "";
+      const report106FilterHtml = activeTab === "report106"
+        ? `
+          <div class="detail" style="margin-bottom:10px;">
+            <div class="detail-body" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <label for="report106WeekFilter"><b>Chọn tuần:</b></label>
+                <select id="report106WeekFilter" class="cell-select" style="min-width:240px;">
+                  <option value="">Tất cả</option>
+                  ${Array.from(new Set(cfg.rows.map((row) => row.week)))
+                    .map((week) => `<option value="${week}" ${reportFilterByTab.report106 === week ? "selected" : ""}>${week}</option>`)
+                    .join("")}
+                </select>
+              </div>
+              <div class="toolbar">
+                <button id="btnApplyReport106Filter" type="button">Xem thông tin</button>
+                <button id="btnClearReport106Filter" type="button">Bỏ lọc</button>
+                <button id="btnExportExcel" type="button">Xuất Excel</button>
+                <button id="btnExportPdf" type="button">Xuất PDF</button>
+              </div>
+            </div>
+          </div>
+        `
+        : "";
+      const report107FilterHtml = activeTab === "report107"
+        ? `
+          <div class="detail" style="margin-bottom:10px;">
+            <div class="detail-body" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <label for="report107MonthFilter"><b>Chọn tháng:</b></label>
+                <select id="report107MonthFilter" class="cell-select" style="min-width:220px;">
+                  <option value="">Tất cả</option>
+                  ${Array.from(new Set(cfg.rows.map((row) => row.month)))
+                    .map((month) => `<option value="${month}" ${reportFilterByTab.report107 === month ? "selected" : ""}>${month}</option>`)
+                    .join("")}
+                </select>
+              </div>
+              <div class="toolbar">
+                <button id="btnApplyReport107Filter" type="button">Xem thông tin</button>
+                <button id="btnClearReport107Filter" type="button">Bỏ lọc</button>
+                <button id="btnExportExcel" type="button">Xuất Excel</button>
+                <button id="btnExportPdf" type="button">Xuất PDF</button>
+              </div>
+            </div>
+          </div>
+        `
+        : "";
+      const report108FilterHtml = activeTab === "report108"
+        ? `
+          <div class="detail" style="margin-bottom:10px;">
+            <div class="detail-body" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <label for="report108QuarterFilter"><b>Chọn quý:</b></label>
+                <select id="report108QuarterFilter" class="cell-select" style="min-width:220px;">
+                  <option value="">Tất cả</option>
+                  ${Array.from(new Set(cfg.rows.map((row) => row.quarter)))
+                    .map((quarter) => `<option value="${quarter}" ${reportFilterByTab.report108 === quarter ? "selected" : ""}>${quarter}</option>`)
+                    .join("")}
+                </select>
+              </div>
+              <div class="toolbar">
+                <button id="btnApplyReport108Filter" type="button">Xem thông tin</button>
+                <button id="btnClearReport108Filter" type="button">Bỏ lọc</button>
+                <button id="btnExportExcel" type="button">Xuất Excel</button>
+                <button id="btnExportPdf" type="button">Xuất PDF</button>
+              </div>
+            </div>
+          </div>
+        `
+        : "";
+      const canExport =
+        activeTab === "report103" ||
+        activeTab === "report104" ||
+        activeTab === "report105" ||
+        activeTab === "report106" ||
+        activeTab === "report107" ||
+        activeTab === "report108" ||
+        activeTab === "report109" ||
+        activeTab === "report110";
+
+      const showCrud =
+        activeTab !== "report43" &&
+        activeTab !== "report44" &&
+        activeTab !== "report45" &&
+        activeTab !== "report46" &&
+        activeTab !== "report105" &&
+        activeTab !== "report106" &&
+        activeTab !== "report107" &&
+        activeTab !== "report108";
 
       container.innerHTML = `
         <div class="panel-head">
@@ -815,6 +1441,7 @@
                    <button id="btnEditRow" type="button">Sửa</button>
                    <button id="btnSaveRow" type="button" class="primary">Lưu lại</button>
                    <button id="btnDeleteRow" type="button">Xóa</button>
+                   ${(canExport && activeTab !== "report105" && activeTab !== "report106" && activeTab !== "report107" && activeTab !== "report108") ? `<button id="btnExportExcel" type="button">Xuất Excel</button><button id="btnExportPdf" type="button">Xuất PDF</button>` : ""}
                  </div>`
               : ""
             }
@@ -825,6 +1452,10 @@
           ${report44MetaHtml}
           ${report45MetaHtml}
           ${report46MetaHtml}
+          ${report105FilterHtml}
+          ${report106FilterHtml}
+          ${report107FilterHtml}
+          ${report108FilterHtml}
           <table>
             <thead>${thead}</thead>
             <tbody>${rowsHtml}</tbody>
@@ -857,6 +1488,96 @@
       const btnEditRow = container.querySelector("#btnEditRow");
       const btnSaveRow = container.querySelector("#btnSaveRow");
       const btnDeleteRow = container.querySelector("#btnDeleteRow");
+      const btnExportExcel = container.querySelector("#btnExportExcel");
+      const btnExportPdf = container.querySelector("#btnExportPdf");
+      const btnApplyReport105Filter = container.querySelector("#btnApplyReport105Filter");
+      const btnClearReport105Filter = container.querySelector("#btnClearReport105Filter");
+      const report105DateFilter = container.querySelector("#report105DateFilter");
+      const btnApplyReport106Filter = container.querySelector("#btnApplyReport106Filter");
+      const btnClearReport106Filter = container.querySelector("#btnClearReport106Filter");
+      const report106WeekFilter = container.querySelector("#report106WeekFilter");
+      const btnApplyReport107Filter = container.querySelector("#btnApplyReport107Filter");
+      const btnClearReport107Filter = container.querySelector("#btnClearReport107Filter");
+      const report107MonthFilter = container.querySelector("#report107MonthFilter");
+      const btnApplyReport108Filter = container.querySelector("#btnApplyReport108Filter");
+      const btnClearReport108Filter = container.querySelector("#btnClearReport108Filter");
+      const report108QuarterFilter = container.querySelector("#report108QuarterFilter");
+      if (canExport) {
+        if (btnExportExcel) {
+          btnExportExcel.addEventListener("click", () => {
+            exportCurrentTabToExcel(activeTab);
+          });
+        }
+        if (btnExportPdf) {
+          btnExportPdf.addEventListener("click", () => {
+            exportCurrentTabToPdf(activeTab);
+          });
+        }
+      }
+      if (activeTab === "report105") {
+        if (btnApplyReport105Filter && report105DateFilter) {
+          btnApplyReport105Filter.addEventListener("click", () => {
+            reportFilterByTab.report105 = report105DateFilter.value || "";
+            selectedRowByTab.report105 = 0;
+            renderPanel();
+          });
+        }
+        if (btnClearReport105Filter) {
+          btnClearReport105Filter.addEventListener("click", () => {
+            reportFilterByTab.report105 = "";
+            selectedRowByTab.report105 = 0;
+            renderPanel();
+          });
+        }
+      }
+      if (activeTab === "report106") {
+        if (btnApplyReport106Filter && report106WeekFilter) {
+          btnApplyReport106Filter.addEventListener("click", () => {
+            reportFilterByTab.report106 = report106WeekFilter.value || "";
+            selectedRowByTab.report106 = 0;
+            renderPanel();
+          });
+        }
+        if (btnClearReport106Filter) {
+          btnClearReport106Filter.addEventListener("click", () => {
+            reportFilterByTab.report106 = "";
+            selectedRowByTab.report106 = 0;
+            renderPanel();
+          });
+        }
+      }
+      if (activeTab === "report107") {
+        if (btnApplyReport107Filter && report107MonthFilter) {
+          btnApplyReport107Filter.addEventListener("click", () => {
+            reportFilterByTab.report107 = report107MonthFilter.value || "";
+            selectedRowByTab.report107 = 0;
+            renderPanel();
+          });
+        }
+        if (btnClearReport107Filter) {
+          btnClearReport107Filter.addEventListener("click", () => {
+            reportFilterByTab.report107 = "";
+            selectedRowByTab.report107 = 0;
+            renderPanel();
+          });
+        }
+      }
+      if (activeTab === "report108") {
+        if (btnApplyReport108Filter && report108QuarterFilter) {
+          btnApplyReport108Filter.addEventListener("click", () => {
+            reportFilterByTab.report108 = report108QuarterFilter.value || "";
+            selectedRowByTab.report108 = 0;
+            renderPanel();
+          });
+        }
+        if (btnClearReport108Filter) {
+          btnClearReport108Filter.addEventListener("click", () => {
+            reportFilterByTab.report108 = "";
+            selectedRowByTab.report108 = 0;
+            renderPanel();
+          });
+        }
+      }
       if (!showCrud) return;
 
       btnAddRow.addEventListener("click", () => {
@@ -895,6 +1616,7 @@
         if (targetRow.completedCount !== undefined) targetRow.completedCount = Number(targetRow.completedCount || 0);
         if (targetRow.inProgressCount !== undefined) targetRow.inProgressCount = Number(targetRow.inProgressCount || 0);
         if (targetRow.notCollectedCount !== undefined) targetRow.notCollectedCount = Number(targetRow.notCollectedCount || 0);
+        if (targetRow.dataSizeMb !== undefined) targetRow.dataSizeMb = Number(targetRow.dataSizeMb || 0);
         if (activeTab === "task138") syncApprovalFromRegistration(targetRow);
         delete editingRowByTab[activeTab];
         renderPanel();
@@ -909,7 +1631,14 @@
         if (activeTab === "task138") removeApprovalByRegistrationId(selected.id);
         if (activeTab === "task139") removeRegistrationByApprovalId(selected.id);
         cfg.rows.splice(rowIdx, 1);
-        if (activeTab === "report41" || activeTab === "report42") {
+        if (
+          activeTab === "report41" ||
+          activeTab === "report42" ||
+          activeTab === "report103" ||
+          activeTab === "report104" ||
+          activeTab === "report109" ||
+          activeTab === "report110"
+        ) {
           cfg.rows.forEach((row, index) => {
             row.stt = index + 1;
           });
