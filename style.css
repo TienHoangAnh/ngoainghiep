@@ -23,7 +23,8 @@ body {
 .app {
     display: grid;
     grid-template-columns: 260px 1fr;
-    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .sidebar {
@@ -31,6 +32,7 @@ body {
     color: #dbe9f8;
     border-right: 1px solid #1f4b79;
     padding: 12px;
+    overflow-y: auto;
 }
 
 .brand {
@@ -75,6 +77,7 @@ body {
     display: grid;
     grid-template-rows: 52px 1fr;
     min-width: 0;
+    overflow: hidden;
 }
 
 .topbar {
@@ -100,14 +103,18 @@ body {
 .tabs {
     display: flex;
     gap: 6px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     margin-bottom: 10px;
+    padding-bottom: 4px;
 }
 
 .tab {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    gap: 6px;
     border: 1px solid var(--line);
     background: #f9fbff;
     padding: 7px 10px;
@@ -115,6 +122,16 @@ body {
     cursor: pointer;
     font-size: 13px;
     color: #2a4464;
+    flex: 0 0 360px;
+    min-width: 360px;
+    max-width: 360px;
+}
+
+.tab-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 .tab.active {
