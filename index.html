@@ -36,6 +36,12 @@
       <div class="menu-group-title">Chức năng đồng bộ dữ liệu</div>
       <button class="menu-item" data-view="report109">Thiết lập tải bản đồ nền ngoại tuyến theo quyền hạn</button>
       <button class="menu-item" data-view="report110">Thiết lập tải dữ liệu bản đồ lưới điện ngoại tuyến theo quyền hạn</button>
+
+      <div class="menu-group-title">Thu thập dữ liệu ngoại nghiệp</div>
+      <button class="menu-item" data-view="task126">Quản lý danh sách thiết bị cần thu thập</button>
+      <button class="menu-item" data-view="task127">Phân công nhân sự thu thập dữ liệu</button>
+      <button class="menu-item" data-view="task128">Tiếp nhận công việc thu thập dữ liệu</button>
+      <button class="menu-item" data-view="task129">Chức năng thu thập dữ liệu ngoại nghiệp</button>
     </aside>
 
     <section class="main">
@@ -55,12 +61,79 @@
 
   <script>
     const viewConfigs = {
+      task126: {
+        title: "Quản lý danh sách thiết bị cần thu thập",
+        columns: ["Mã thiết bị", "Loại thiết bị", "Nguồn đồng bộ", "Đơn vị quản lý", "Trạng thái"],
+        rows: [
+          { deviceCode: "TB-126-001", deviceType: "Cột điện", source: "PMIS", managerUnit: "PC Hà Nội", status: "Mới đồng bộ", updated: "22/04/2026 08:30", note: "Cần thu thập ngoại nghiệp" },
+          { deviceCode: "TB-126-002", deviceType: "Trạm biến áp", source: "GIS cũ", managerUnit: "PC Hà Nội", status: "Sai thông tin", updated: "22/04/2026 09:40", note: "Sai tọa độ cần kiểm tra" }
+        ],
+        detailMap: [
+          ["Mã thiết bị", "deviceCode"],
+          ["Loại thiết bị", "deviceType"],
+          ["Nguồn đồng bộ", "source"],
+          ["Đơn vị quản lý", "managerUnit"],
+          ["Trạng thái", "status"],
+          ["Cập nhật lúc", "updated"],
+          ["Ghi chú", "note"]
+        ]
+      },
+      task127: {
+        title: "Phân công nhân sự thu thập dữ liệu",
+        columns: ["Mã phân công", "Nhân sự", "Thiết bị được gán", "Hạn xử lý", "Trạng thái"],
+        rows: [
+          { assignmentCode: "PC-127-001", assignee: "nguyen.a", assignedDevices: "TB-126-001, TB-126-003", dueDate: "30/04/2026", status: "Đã phân công", notifier: "ql.npc", note: "Thu thập trong ca sáng" },
+          { assignmentCode: "PC-127-002", assignee: "tran.b", assignedDevices: "TB-126-002", dueDate: "28/04/2026", status: "Chờ tiếp nhận", notifier: "ql.npc", note: "-" }
+        ],
+        detailMap: [
+          ["Mã phân công", "assignmentCode"],
+          ["Nhân sự", "assignee"],
+          ["Thiết bị được gán", "assignedDevices"],
+          ["Hạn xử lý", "dueDate"],
+          ["Trạng thái", "status"],
+          ["Người phân công", "notifier"],
+          ["Ghi chú", "note"]
+        ]
+      },
+      task128: {
+        title: "Tiếp nhận công việc thu thập dữ liệu",
+        columns: ["Mã phân công", "Nhân sự", "Thiết bị", "Trạng thái tiếp nhận", "Lý do từ chối"],
+        rows: [
+          { assignmentCode: "PC-127-001", assignee: "nguyen.a", devices: "TB-126-001, TB-126-003", receiveStatus: "Đã tiếp nhận", rejectReason: "-", notifyManager: "ql.npc", updated: "22/04/2026 10:20" },
+          { assignmentCode: "PC-127-002", assignee: "tran.b", devices: "TB-126-002", receiveStatus: "Từ chối", rejectReason: "Thiếu thông tin hồ sơ hiện trạng", notifyManager: "ql.npc", updated: "22/04/2026 11:05" }
+        ],
+        detailMap: [
+          ["Mã phân công", "assignmentCode"],
+          ["Nhân sự", "assignee"],
+          ["Thiết bị", "devices"],
+          ["Trạng thái tiếp nhận", "receiveStatus"],
+          ["Lý do từ chối", "rejectReason"],
+          ["Thông báo quản lý", "notifyManager"],
+          ["Cập nhật lúc", "updated"]
+        ]
+      },
+      task129: {
+        title: "Chức năng thu thập dữ liệu ngoại nghiệp",
+        columns: ["Mã biểu mẫu", "Thiết bị", "Người thu thập", "Trạng thái lưu", "Cập nhật gần nhất"],
+        rows: [
+          { formCode: "FM-129-001", deviceCode: "TB-126-001", collector: "nguyen.a", saveStatus: "Draft", updated: "22/04/2026 10:45", warning: "Có thiết bị mới trên lưới" },
+          { formCode: "FM-129-002", deviceCode: "TB-126-002", collector: "tran.b", saveStatus: "Đã xác nhận", updated: "22/04/2026 11:15", warning: "Thiết bị thay đổi thông tin trên lưới" }
+        ],
+        detailMap: [
+          ["Mã biểu mẫu", "formCode"],
+          ["Thiết bị", "deviceCode"],
+          ["Người thu thập", "collector"],
+          ["Trạng thái lưu", "saveStatus"],
+          ["Cập nhật gần nhất", "updated"],
+          ["Thông báo/Cảnh báo", "warning"]
+        ]
+      },
       task137: {
         title: "Giao nhiệm vụ thực hiện",
         columns: ["Mã NV", "Đơn vị giao", "Đơn vị nhận", "Số lượng", "Trạng thái"],
         rows: [
-          { id: "NV-137-01", assigner: "Sở TNMT", receiver: "Phòng TN huyện A", amount: 120, status: "Đã giao", timeline: "01/04/2026 - 20/04/2026", note: "Dữ liệu thuộc tính đặt ở" },
-          { id: "NV-137-02", assigner: "Sở TNMT", receiver: "Phòng TN huyện B", amount: 95, status: "Chờ tiếp nhận", timeline: "05/04/2026 - 30/04/2026", note: "Cập nhật biến động địa chính" }
+          { id: "NV-137-01", assigner: "Sở TNMT", receiver: "Phòng TN Xã A", amount: 120, status: "Đã giao", timeline: "01/04/2026 - 20/04/2026", note: "Dữ liệu thuộc tính đặt ở" },
+          { id: "NV-137-02", assigner: "Sở TNMT", receiver: "Phòng TN Xã B", amount: 95, status: "Chờ tiếp nhận", timeline: "05/04/2026 - 30/04/2026", note: "Cập nhật biến động địa chính" }
         ],
         detailMap: [
           ["Mã nhiệm vụ", "id"],
@@ -76,8 +149,8 @@
         title: "Đăng ký nhiệm vụ thực hiện",
         columns: ["Mã DK", "Đơn vị đăng ký", "Nhiệm vụ", "Số lượng", "Trạng thái"],
         rows: [
-          { id: "DK-138-11", unit: "Phòng TN huyện A", task: "Chuẩn hóa thửa đất khu Bắc", amount: 80, status: "Đã duyệt", date: "08/04/2026", note: "Đăng ký đợt 1" },
-          { id: "DK-138-12", unit: "Phòng TN huyện C", task: "Thu thập hiện trạng sử dụng đất", amount: 60, status: "Từ chối", date: "09/04/2026", note: "Thiếu kế hoạch chi tiết" }
+          { id: "DK-138-11", unit: "Phòng TN Xã A", task: "Chuẩn hóa thửa đất khu Bắc", amount: 80, status: "Đã duyệt", date: "08/04/2026", note: "Đăng ký đợt 1" },
+          { id: "DK-138-12", unit: "Phòng TN Xã C", task: "Thu thập hiện trạng sử dụng đất", amount: 60, status: "Từ chối", date: "09/04/2026", note: "Thiếu kế hoạch chi tiết" }
         ],
         detailMap: [
           ["Mã đăng ký", "id"],
@@ -93,8 +166,8 @@
         title: "Duyệt / Từ chối đăng ký nhiệm vụ",
         columns: ["Hồ sơ", "Đơn vị", "Kết quả", "Lý do từ chối", "Người xử lý"],
         rows: [
-          { id: "DK-138-11", unit: "Phòng TN huyện A", result: "Đã duyệt", reason: "-", officer: "admin.npc", status: "Đã duyệt", updated: "10/04/2026 14:12" },
-          { id: "DK-138-12", unit: "Phòng TN huyện C", result: "Từ chối", reason: "Thiếu kế hoạch chi tiết", officer: "admin.npc", status: "Từ chối", updated: "10/04/2026 09:30" }
+          { id: "DK-138-11", unit: "Phòng TN Xã A", result: "Đã duyệt", reason: "-", officer: "admin.npc", status: "Đã duyệt", updated: "10/04/2026 14:12" },
+          { id: "DK-138-12", unit: "Phòng TN Xã C", result: "Từ chối", reason: "Thiếu kế hoạch chi tiết", officer: "admin.npc", status: "Từ chối", updated: "10/04/2026 09:30" }
         ],
         detailMap: [
           ["Mã hồ sơ", "id"],
@@ -628,6 +701,10 @@
     }
 
     function getEditableFields(tabKey) {
+      if (tabKey === "task126") return ["deviceType", "source", "managerUnit", "status"];
+      if (tabKey === "task127") return ["assignee", "assignedDevices", "dueDate", "status"];
+      if (tabKey === "task128") return ["assignee", "devices", "receiveStatus", "rejectReason"];
+      if (tabKey === "task129") return ["deviceCode", "collector", "saveStatus", "updated"];
       if (tabKey === "report103") return ["workType", "period", "completedCount", "inProgressCount", "notCollectedCount"];
       if (tabKey === "report104") return ["objectCode", "objectType", "coordinate", "technicalInfo", "managerUnit", "imageName", "status"];
       if (tabKey === "report105") return ["unit", "date", "object", "collectedNew", "cumulativeByDate", "assignedData", "registeredData", "calcUnit"];
@@ -649,11 +726,54 @@
     }
 
     function createDefaultRow(tabKey) {
+      if (tabKey === "task126") {
+        return {
+          deviceCode: "TB-126-" + String(Math.floor(Math.random() * 900 + 100)),
+          deviceType: "Thiết bị mới",
+          source: "PMIS",
+          managerUnit: "Đơn vị quản lý",
+          status: "Mới đồng bộ",
+          updated: new Date().toLocaleString("vi-VN"),
+          note: "-"
+        };
+      }
+      if (tabKey === "task127") {
+        return {
+          assignmentCode: "PC-127-" + String(Math.floor(Math.random() * 900 + 100)),
+          assignee: "nhan.su.moi",
+          assignedDevices: "TB-126-XXX",
+          dueDate: new Date().toLocaleDateString("vi-VN"),
+          status: "Chờ tiếp nhận",
+          notifier: "ql.npc",
+          note: "-"
+        };
+      }
+      if (tabKey === "task128") {
+        return {
+          assignmentCode: "PC-127-" + String(Math.floor(Math.random() * 900 + 100)),
+          assignee: "nhan.su.moi",
+          devices: "TB-126-XXX",
+          receiveStatus: "Chờ tiếp nhận",
+          rejectReason: "-",
+          notifyManager: "ql.npc",
+          updated: new Date().toLocaleString("vi-VN")
+        };
+      }
+      if (tabKey === "task129") {
+        return {
+          formCode: "FM-129-" + String(Math.floor(Math.random() * 900 + 100)),
+          deviceCode: "TB-126-XXX",
+          collector: "nhan.su.moi",
+          saveStatus: "Draft",
+          updated: new Date().toLocaleString("vi-VN"),
+          warning: "-"
+        };
+      }
       if (tabKey === "task137") {
         return {
           id: "NV-137-" + String(Math.floor(Math.random() * 900 + 100)),
           assigner: "Sở TNMT",
-          receiver: "Phòng TN huyện mới",
+          receiver: "Phòng TN Xã mới",
           amount: 0,
           status: "Chờ tiếp nhận",
           timeline: "-",
@@ -945,6 +1065,18 @@
     }
 
     function getExportFieldOrder(tabKey) {
+      if (tabKey === "task126") {
+        return ["deviceCode", "deviceType", "source", "managerUnit", "status"];
+      }
+      if (tabKey === "task127") {
+        return ["assignmentCode", "assignee", "assignedDevices", "dueDate", "status"];
+      }
+      if (tabKey === "task128") {
+        return ["assignmentCode", "assignee", "devices", "receiveStatus", "rejectReason"];
+      }
+      if (tabKey === "task129") {
+        return ["formCode", "deviceCode", "collector", "saveStatus", "updated"];
+      }
       if (tabKey === "report103") {
         return ["stt", "workType", "period", "completedCount", "inProgressCount", "notCollectedCount"];
       }
@@ -1092,6 +1224,38 @@
               <td>${isEditing
                 ? `<select class="cell-select" data-field="status"><option ${row.status === "Đã giao" ? "selected" : ""}>Đã giao</option><option ${row.status === "Chờ tiếp nhận" ? "selected" : ""}>Chờ tiếp nhận</option></select>`
                 : statusPill(row.status)}</td>
+            `;
+          } else if (activeTab === "task126") {
+            cells = `
+              <td>${row.deviceCode}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="deviceType" value="${row.deviceType}">` : row.deviceType}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="source" value="${row.source}">` : row.source}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="managerUnit" value="${row.managerUnit}">` : row.managerUnit}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="status" value="${row.status}">` : statusPill(row.status)}</td>
+            `;
+          } else if (activeTab === "task127") {
+            cells = `
+              <td>${row.assignmentCode}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="assignee" value="${row.assignee}">` : row.assignee}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="assignedDevices" value="${row.assignedDevices}">` : row.assignedDevices}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="dueDate" value="${row.dueDate}">` : row.dueDate}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="status" value="${row.status}">` : statusPill(row.status)}</td>
+            `;
+          } else if (activeTab === "task128") {
+            cells = `
+              <td>${row.assignmentCode}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="assignee" value="${row.assignee}">` : row.assignee}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="devices" value="${row.devices}">` : row.devices}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="receiveStatus" value="${row.receiveStatus}">` : statusPill(row.receiveStatus)}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="rejectReason" value="${row.rejectReason}">` : row.rejectReason}</td>
+            `;
+          } else if (activeTab === "task129") {
+            cells = `
+              <td>${row.formCode}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="deviceCode" value="${row.deviceCode}">` : row.deviceCode}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="collector" value="${row.collector}">` : row.collector}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="saveStatus" value="${row.saveStatus}">` : row.saveStatus}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="updated" value="${row.updated}">` : row.updated}</td>
             `;
           } else if (activeTab === "task138") {
             cells = `
@@ -1411,6 +1575,10 @@
         `
         : "";
       const canExport =
+        activeTab === "task126" ||
+        activeTab === "task127" ||
+        activeTab === "task128" ||
+        activeTab === "task129" ||
         activeTab === "report103" ||
         activeTab === "report104" ||
         activeTab === "report105" ||
