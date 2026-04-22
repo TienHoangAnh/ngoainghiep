@@ -18,11 +18,17 @@
 
       <div class="menu-group-title">Báo cáo</div>
       <button class="menu-item" data-view="overview">Tổng quan xử lý hồ sơ</button>
+      <button class="menu-item" data-view="report41">Báo cáo thống kê số liệu thu thập theo phiên làm việc</button>
+      <button class="menu-item" data-view="report42">Báo cáo thống kê số liệu thu thập theo phân công công việc</button>
+      <button class="menu-item" data-view="report43">Báo cáo thống kê số liệu thu thập theo ngày so với nhiệm vụ và đăng ký</button>
+      <button class="menu-item" data-view="report44">Báo cáo thống kê số liệu thu thập theo tuần so với nhiệm vụ và đăng ký</button>
+      <button class="menu-item" data-view="report45">Báo cáo thống kê số liệu thu thập theo tháng so với nhiệm vụ và đăng ký</button>
+      <button class="menu-item" data-view="report46">Báo cáo thống kê số liệu thu thập theo quí so với nhiệm vụ và đăng ký</button>
     </aside>
 
     <section class="main">
       <header class="topbar">
-        <h1>Giao diện đang tab - list và chi tiết</h1>
+        <h1>Phần mêm quản lý ngoại nghiệp</h1>
         <small id="clock"></small>
       </header>
 
@@ -102,6 +108,248 @@
           ["Ghi chú", "note"],
           ["Trạng thái", "status"]
         ]
+      },
+      report41: {
+        title: "Báo cáo thống kê số liệu thu thập theo phiên làm việc",
+        columns: [
+          "Stt",
+          "Phiên Làm Việc",
+          "Khoảng Thời Gian",
+          "Số Lượng Thiết Bị Hoàn Thành Thu Thập",
+          "Số Lượng Thiết Bị Đang Trong Quá Trình Thu Thập",
+          "Số Lượng Thiết Bị Chưa Được Thu Thập"
+        ],
+        rows: [
+          {
+            stt: 1,
+            session: "A",
+            period: "01/01/2023 - 30/01/2023",
+            completedCount: 10,
+            inProgressCount: 1,
+            notCollectedCount: 9
+          },
+          {
+            stt: 2,
+            session: "B",
+            period: "01/02/2023 - 28/02/2023",
+            completedCount: 8,
+            inProgressCount: 2,
+            notCollectedCount: 6
+          }
+        ],
+        detailMap: [
+          ["Stt", "stt"],
+          ["Phiên Làm Việc", "session"],
+          ["Khoảng Thời Gian", "period"],
+          ["Thiết bị hoàn thành thu thập", "completedCount"],
+          ["Thiết bị đang thu thập", "inProgressCount"],
+          ["Thiết bị chưa thu thập", "notCollectedCount"]
+        ]
+      },
+      report42: {
+        title: "Báo cáo thống kê số liệu thu thập theo phân công công việc",
+        columns: [
+          "Stt",
+          "Loại Công Việc",
+          "Khoảng Thời Gian",
+          "Số Lượng Thiết Bị Hoàn Thành Thu Thập",
+          "Số Lượng Thiết Bị Đang Trong Quá Trình Thu Thập",
+          "Số Lượng Thiết Bị Chưa Được Thu Thập"
+        ],
+        rows: [
+          {
+            stt: 1,
+            workType: "Thu thập mới",
+            period: "01/01/2023 - 30/01/2023",
+            completedCount: 10,
+            inProgressCount: 1,
+            notCollectedCount: 9
+          },
+          {
+            stt: 2,
+            workType: "",
+            period: "",
+            completedCount: "",
+            inProgressCount: "",
+            notCollectedCount: ""
+          }
+        ],
+        detailMap: [
+          ["Stt", "stt"],
+          ["Loại Công Việc", "workType"],
+          ["Khoảng Thời Gian", "period"],
+          ["Thiết bị hoàn thành thu thập", "completedCount"],
+          ["Thiết bị đang thu thập", "inProgressCount"],
+          ["Thiết bị chưa thu thập", "notCollectedCount"]
+        ]
+      },
+      report43: {
+        title: "Báo cáo thống kê số liệu thu thập theo ngày so với nhiệm vụ và đăng ký",
+        reportMeta: {
+          title: "BÁO CÁO THỐNG KÊ SỐ LIỆU THU THẬP THEO NGÀY SO VỚI NHIỆM VỤ VÀ ĐĂNG KÝ KẾ HOẠCH",
+          unit: "A",
+          fromDate: "...",
+          toDate: "..."
+        },
+        columns: [
+          "STT",
+          "Đơn vị",
+          "Ngày",
+          "Đối tượng",
+          "Số liệu thu thập mới",
+          "Số liệu lũy kế theo ngày",
+          "Số liệu giao",
+          "Số liệu đăng ký",
+          "Đơn vị tính"
+        ],
+        rows: [
+          { stt: "1", unit: "A", date: "1/1/2023", object: "Cột điện", collectedNew: "10", cumulativeByDate: "100", assignedData: "1000", registeredData: "900", calcUnit: "cột" },
+          { stt: "2", unit: "A", date: "1/1/2023", object: "Trạm biến áp", collectedNew: "10", cumulativeByDate: "100", assignedData: "1000", registeredData: "900", calcUnit: "trạm" },
+          { stt: ".", unit: "..", date: "..", object: "..", collectedNew: "..", cumulativeByDate: "..", assignedData: "..", registeredData: "..", calcUnit: ".." },
+          { stt: ".", unit: "..", date: "..", object: "..", collectedNew: "..", cumulativeByDate: "..", assignedData: "..", registeredData: "..", calcUnit: ".." },
+          { stt: "Tổng", unit: "A", date: "1/1/2023", object: "", collectedNew: "20", cumulativeByDate: "200", assignedData: "2000", registeredData: "1800", calcUnit: "", isTotal: true },
+          { stt: "1", unit: "A", date: "2/1/2023", object: "Cột điện", collectedNew: "10", cumulativeByDate: "100", assignedData: "1000", registeredData: "900", calcUnit: "cột" },
+          { stt: "2", unit: "A", date: "2/1/2023", object: "Trạm biến áp", collectedNew: "10", cumulativeByDate: "100", assignedData: "1000", registeredData: "900", calcUnit: "trạm" },
+          { stt: ".", unit: "..", date: "..", object: "..", collectedNew: "..", cumulativeByDate: "..", assignedData: "..", registeredData: "..", calcUnit: ".." },
+          { stt: ".", unit: "..", date: "..", object: "..", collectedNew: "..", cumulativeByDate: "..", assignedData: "..", registeredData: "..", calcUnit: ".." },
+          { stt: "Tổng", unit: "A", date: "2/1/2023", object: "", collectedNew: "20", cumulativeByDate: "200", assignedData: "2000", registeredData: "1800", calcUnit: "", isTotal: true }
+        ],
+        detailMap: [
+          ["STT", "stt"],
+          ["Đơn vị", "unit"],
+          ["Ngày", "date"],
+          ["Đối tượng", "object"],
+          ["Số liệu thu thập mới", "collectedNew"],
+          ["Số liệu lũy kế theo ngày", "cumulativeByDate"],
+          ["Số liệu giao", "assignedData"],
+          ["Số liệu đăng ký", "registeredData"],
+          ["Đơn vị tính", "calcUnit"]
+        ]
+      },
+      report44: {
+        title: "Báo cáo thống kê số liệu thu thập theo tuần so với nhiệm vụ và đăng ký",
+        reportMeta: {
+          title: "BÁO CÁO THỐNG KÊ SỐ LIỆU THU THẬP THEO TUẦN SO VỚI NHIỆM VỤ VÀ ĐĂNG KÝ KẾ HOẠCH",
+          unit: "A",
+          fromWeek: "",
+          toWeek: ""
+        },
+        columns: [
+          "STT",
+          "Đơn vị",
+          "(Tuần)",
+          "Đối tượng",
+          "Số liệu thu thập mới",
+          "Số liệu lũy kế theo tuần",
+          "Số liệu giao",
+          "Số liệu đăng ký",
+          "Đơn vị tính"
+        ],
+        rows: [
+          { stt: "1", unit: "A", week: "Tuần 1/tháng 1/2023", object: "Cột điện", collectedNew: "10", cumulativeByWeek: "100", assignedData: "900", registeredData: "900", calcUnit: "Cột" },
+          { stt: "2", unit: "A", week: "Tuần 1/tháng 1/2023", object: "Trạm biến áp", collectedNew: "10", cumulativeByWeek: "100", assignedData: "900", registeredData: "900", calcUnit: "Trạm" },
+          { stt: ".", unit: "", week: "", object: "", collectedNew: "", cumulativeByWeek: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: ".", unit: "", week: "", object: "", collectedNew: "", cumulativeByWeek: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: "Tổng", unit: "A", week: "Tuần 1/tháng 1/2023", object: "", collectedNew: "20", cumulativeByWeek: "200", assignedData: "1800", registeredData: "1800", calcUnit: "", isTotal: true },
+          { stt: "1", unit: "A", week: "Tuần 2/tháng 1/2023", object: "Cột điện", collectedNew: "10", cumulativeByWeek: "100", assignedData: "900", registeredData: "900", calcUnit: "Cột" },
+          { stt: "2", unit: "A", week: "Tuần 2/tháng 1/2023", object: "Trạm biến áp", collectedNew: "10", cumulativeByWeek: "100", assignedData: "900", registeredData: "900", calcUnit: "Trạm" },
+          { stt: ".", unit: "", week: "", object: "", collectedNew: "", cumulativeByWeek: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: ".", unit: "", week: "", object: "", collectedNew: "", cumulativeByWeek: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: "Tổng", unit: "A", week: "Tuần 2/tháng 1/2023", object: "", collectedNew: "20", cumulativeByWeek: "200", assignedData: "1800", registeredData: "1800", calcUnit: "", isTotal: true }
+        ],
+        detailMap: [
+          ["STT", "stt"],
+          ["Đơn vị", "unit"],
+          ["(Tuần)", "week"],
+          ["Đối tượng", "object"],
+          ["Số liệu thu thập mới", "collectedNew"],
+          ["Số liệu lũy kế theo tuần", "cumulativeByWeek"],
+          ["Số liệu giao", "assignedData"],
+          ["Số liệu đăng ký", "registeredData"],
+          ["Đơn vị tính", "calcUnit"]
+        ]
+      },
+      report45: {
+        title: "Báo cáo thống kê số liệu thu thập theo tháng so với nhiệm vụ và đăng ký",
+        reportMeta: {
+          title: "BÁO CÁO THỐNG KÊ SỐ LIỆU THU THẬP THEO THÁNG SO VỚI NHIỆM VỤ VÀ ĐĂNG KÝ KẾ HOẠCH",
+          unit: "",
+          fromMonth: "....",
+          toMonth: "..."
+        },
+        columns: [
+          "STT",
+          "Đơn vị",
+          "Tháng",
+          "Đối tượng",
+          "Số liệu thu thập mới",
+          "Số liệu lũy kế theo tháng",
+          "Số liệu giao",
+          "Số liệu đăng ký",
+          "Đơn vị tính"
+        ],
+        rows: [
+          { stt: "1", unit: "A", month: "01/2023", object: "Cột điện", collectedNew: "10", cumulativeByMonth: "100", assignedData: "900", registeredData: "900", calcUnit: "Cột" },
+          { stt: "2", unit: "A", month: "01/2023", object: "Trạm biến áp", collectedNew: "10", cumulativeByMonth: "100", assignedData: "900", registeredData: "900", calcUnit: "trạm" },
+          { stt: ".", unit: "", month: "", object: "", collectedNew: "", cumulativeByMonth: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: ".", unit: "", month: "", object: "", collectedNew: "", cumulativeByMonth: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: "Tổng", unit: "A", month: "01/2023", object: "", collectedNew: "20", cumulativeByMonth: "200", assignedData: "1800", registeredData: "1800", calcUnit: "", isTotal: true },
+          { stt: "1", unit: "A", month: "02/2023", object: "Cột điện", collectedNew: "10", cumulativeByMonth: "100", assignedData: "900", registeredData: "900", calcUnit: "Cột" },
+          { stt: "2", unit: "A", month: "02/2023", object: "Trạm biến áp", collectedNew: "10", cumulativeByMonth: "100", assignedData: "900", registeredData: "900", calcUnit: "trạm" },
+          { stt: ".", unit: "", month: "", object: "", collectedNew: "", cumulativeByMonth: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: ".", unit: "", month: "", object: "", collectedNew: "", cumulativeByMonth: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: "Tổng", unit: "A", month: "02/2023", object: "", collectedNew: "20", cumulativeByMonth: "200", assignedData: "1800", registeredData: "1800", calcUnit: "", isTotal: true }
+        ],
+        detailMap: [
+          ["STT", "stt"],
+          ["Đơn vị", "unit"],
+          ["Tháng", "month"],
+          ["Đối tượng", "object"],
+          ["Số liệu thu thập mới", "collectedNew"],
+          ["Số liệu lũy kế theo tháng", "cumulativeByMonth"],
+          ["Số liệu giao", "assignedData"],
+          ["Số liệu đăng ký", "registeredData"],
+          ["Đơn vị tính", "calcUnit"]
+        ]
+      },
+      report46: {
+        title: "Báo cáo thống kê số liệu thu thập theo quí so với nhiệm vụ và đăng ký",
+        reportMeta: {
+          title: "BÁO CÁO THỐNG KÊ SỐ LIỆU THU THẬP THEO QUÍ SO VỚI NHIỆM VỤ VÀ ĐĂNG KÝ KẾ HOẠCH",
+          unit: "...."
+        },
+        columns: [
+          "STT",
+          "Đơn vị",
+          "Quí",
+          "Đối tượng",
+          "Số liệu thu thập mới",
+          "Số liệu lũy kế theo quí",
+          "Số liệu giao",
+          "Số liệu đăng ký",
+          "Đơn vị tính"
+        ],
+        rows: [
+          { stt: "1", unit: "A", quarter: "Quí 1/2023", object: "Cột điện", collectedNew: "10", cumulativeByQuarter: "100", assignedData: "900", registeredData: "900", calcUnit: "Cột" },
+          { stt: "2", unit: "A", quarter: "Quí 1/2023", object: "Trạm biến áp", collectedNew: "10", cumulativeByQuarter: "100", assignedData: "900", registeredData: "900", calcUnit: "trạm" },
+          { stt: ".", unit: "", quarter: "", object: "", collectedNew: "", cumulativeByQuarter: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: ".", unit: "", quarter: "", object: "", collectedNew: "", cumulativeByQuarter: "", assignedData: "", registeredData: "", calcUnit: "" },
+          { stt: "Tổng", unit: "A", quarter: "Quí 1/2023", object: "", collectedNew: "20", cumulativeByQuarter: "200", assignedData: "1800", registeredData: "1800", calcUnit: "", isTotal: true },
+          { stt: "1", unit: "A", quarter: "Quí 2/2023", object: "Cột điện", collectedNew: "10", cumulativeByQuarter: "100", assignedData: "900", registeredData: "900", calcUnit: "Cột" },
+          { stt: "2", unit: "A", quarter: "Quí 2/2023", object: "Trạm biến áp", collectedNew: "10", cumulativeByQuarter: "100", assignedData: "900", registeredData: "900", calcUnit: "trạm" },
+          { stt: ".", unit: "", quarter: "", object: "", collectedNew: "", cumulativeByQuarter: "", assignedData: "", registeredData: "", calcUnit: "" }
+        ],
+        detailMap: [
+          ["STT", "stt"],
+          ["Đơn vị", "unit"],
+          ["Quí", "quarter"],
+          ["Đối tượng", "object"],
+          ["Số liệu thu thập mới", "collectedNew"],
+          ["Số liệu lũy kế theo quí", "cumulativeByQuarter"],
+          ["Số liệu giao", "assignedData"],
+          ["Số liệu đăng ký", "registeredData"],
+          ["Đơn vị tính", "calcUnit"]
+        ]
       }
     };
 
@@ -129,6 +377,12 @@
       if (tabKey === "task137") return ["assigner", "receiver", "amount", "status"];
       if (tabKey === "task138") return ["unit", "task", "amount", "status"];
       if (tabKey === "task139") return ["reason", "officer"];
+      if (tabKey === "report41") return ["session", "period", "completedCount", "inProgressCount", "notCollectedCount"];
+      if (tabKey === "report42") return ["workType", "period", "completedCount", "inProgressCount", "notCollectedCount"];
+      if (tabKey === "report43") return ["unit", "date", "object", "collectedNew", "cumulativeByDate", "assignedData", "registeredData", "calcUnit"];
+      if (tabKey === "report44") return ["unit", "week", "object", "collectedNew", "cumulativeByWeek", "assignedData", "registeredData", "calcUnit"];
+      if (tabKey === "report45") return ["unit", "month", "object", "collectedNew", "cumulativeByMonth", "assignedData", "registeredData", "calcUnit"];
+      if (tabKey === "report46") return ["unit", "quarter", "object", "collectedNew", "cumulativeByQuarter", "assignedData", "registeredData", "calcUnit"];
       return ["value", "note", "status"];
     }
 
@@ -164,6 +418,78 @@
           officer: "",
           status: "Chờ duyệt",
           updated: new Date().toLocaleString("vi-VN")
+        };
+      }
+      if (tabKey === "report41") {
+        return {
+          stt: viewConfigs.report41.rows.length + 1,
+          session: "Phiên mới",
+          period: "-",
+          completedCount: 0,
+          inProgressCount: 0,
+          notCollectedCount: 0
+        };
+      }
+      if (tabKey === "report42") {
+        return {
+          stt: viewConfigs.report42.rows.length + 1,
+          workType: "Loại công việc mới",
+          period: "-",
+          completedCount: 0,
+          inProgressCount: 0,
+          notCollectedCount: 0
+        };
+      }
+      if (tabKey === "report43") {
+        return {
+          stt: String(viewConfigs.report43.rows.length + 1),
+          unit: "A",
+          date: new Date().toLocaleDateString("vi-VN"),
+          object: "Đối tượng mới",
+          collectedNew: "0",
+          cumulativeByDate: "0",
+          assignedData: "0",
+          registeredData: "0",
+          calcUnit: "-"
+        };
+      }
+      if (tabKey === "report44") {
+        return {
+          stt: String(viewConfigs.report44.rows.length + 1),
+          unit: "A",
+          week: "",
+          object: "Đối tượng mới",
+          collectedNew: "0",
+          cumulativeByWeek: "0",
+          assignedData: "0",
+          registeredData: "0",
+          calcUnit: "-"
+        };
+      }
+      if (tabKey === "report45") {
+        return {
+          stt: String(viewConfigs.report45.rows.length + 1),
+          unit: "A",
+          month: "",
+          object: "Đối tượng mới",
+          collectedNew: "0",
+          cumulativeByMonth: "0",
+          assignedData: "0",
+          registeredData: "0",
+          calcUnit: "-"
+        };
+      }
+      if (tabKey === "report46") {
+        return {
+          stt: String(viewConfigs.report46.rows.length + 1),
+          unit: "A",
+          quarter: "",
+          object: "Đối tượng mới",
+          collectedNew: "0",
+          cumulativeByQuarter: "0",
+          assignedData: "0",
+          registeredData: "0",
+          calcUnit: "-"
         };
       }
       return {
@@ -276,7 +602,7 @@
       const thead = `<tr>${cfg.columns.map((c) => `<th>${c}</th>`).join("")}</tr>`;
       const rowsHtml = cfg.rows
         .map((row, idx) => {
-          const rowClass = "selectable" + (idx === rowIdx ? " active" : "");
+          const rowClass = "selectable" + (idx === rowIdx ? " active" : "") + (row.isTotal ? " total-row" : "");
           const isEditing = editingRowIdx === idx;
           let cells = "";
           if (activeTab === "task137") {
@@ -306,6 +632,72 @@
               <td>${statusPill(row.result)}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="reason" value="${row.reason || ""}">` : (row.reason || "-")}</td>
               <td>${isEditing ? `<input class="cell-input" data-field="officer" value="${row.officer || ""}">` : (row.officer || "-")}</td>
+            `;
+          } else if (activeTab === "report41") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="session" value="${row.session}">` : row.session}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="period" value="${row.period}">` : row.period}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="completedCount" type="number" min="0" value="${row.completedCount}">` : row.completedCount}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="inProgressCount" type="number" min="0" value="${row.inProgressCount}">` : row.inProgressCount}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="notCollectedCount" type="number" min="0" value="${row.notCollectedCount}">` : row.notCollectedCount}</td>
+            `;
+          } else if (activeTab === "report42") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="workType" value="${row.workType}">` : row.workType}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="period" value="${row.period}">` : row.period}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="completedCount" type="number" min="0" value="${row.completedCount}">` : row.completedCount}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="inProgressCount" type="number" min="0" value="${row.inProgressCount}">` : row.inProgressCount}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="notCollectedCount" type="number" min="0" value="${row.notCollectedCount}">` : row.notCollectedCount}</td>
+            `;
+          } else if (activeTab === "report43") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="date" value="${row.date}">` : row.date}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="object" value="${row.object}">` : row.object}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="collectedNew" value="${row.collectedNew}">` : row.collectedNew}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="cumulativeByDate" value="${row.cumulativeByDate}">` : row.cumulativeByDate}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
+            `;
+          } else if (activeTab === "report44") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="week" value="${row.week}">` : row.week}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="object" value="${row.object}">` : row.object}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="collectedNew" value="${row.collectedNew}">` : row.collectedNew}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="cumulativeByWeek" value="${row.cumulativeByWeek}">` : row.cumulativeByWeek}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
+            `;
+          } else if (activeTab === "report45") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="month" value="${row.month}">` : row.month}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="object" value="${row.object}">` : row.object}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="collectedNew" value="${row.collectedNew}">` : row.collectedNew}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="cumulativeByMonth" value="${row.cumulativeByMonth}">` : row.cumulativeByMonth}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
+            `;
+          } else if (activeTab === "report46") {
+            cells = `
+              <td>${row.stt}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="quarter" value="${row.quarter}">` : row.quarter}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="object" value="${row.object}">` : row.object}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="collectedNew" value="${row.collectedNew}">` : row.collectedNew}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="cumulativeByQuarter" value="${row.cumulativeByQuarter}">` : row.cumulativeByQuarter}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
+              <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
             `;
           } else {
             cells = `
@@ -348,28 +740,102 @@
         `
         : "";
 
+      const report43MetaHtml = activeTab === "report43"
+        ? `
+          <div class="detail" style="margin-bottom:10px;">
+            <div class="detail-body" style="display:block;">
+              <div style="font-size:26px;font-weight:800;text-align:center;line-height:1.25;margin-bottom:10px;">
+                ${cfg.reportMeta.title}
+              </div>
+              <div style="display:flex;gap:30px;justify-content:center;font-size:18px;font-weight:700;">
+                <span>Đơn vị: ${cfg.reportMeta.unit}</span>
+                <span>Từ ngày: ${cfg.reportMeta.fromDate}</span>
+                <span>Đến ngày: ${cfg.reportMeta.toDate}</span>
+              </div>
+            </div>
+          </div>
+        `
+        : "";
+      const report44MetaHtml = activeTab === "report44"
+        ? `
+          <div class="detail" style="margin-bottom:10px;">
+            <div class="detail-body" style="display:block;">
+              <div style="font-size:26px;font-weight:800;text-align:center;line-height:1.25;margin-bottom:10px;">
+                ${cfg.reportMeta.title}
+              </div>
+              <div style="display:flex;gap:30px;justify-content:center;font-size:18px;font-weight:700;">
+                <span>Đơn vị: ${cfg.reportMeta.unit}</span>
+                <span>Từ tuần: ${cfg.reportMeta.fromWeek}</span>
+                <span>Đến tuần: ${cfg.reportMeta.toWeek}</span>
+              </div>
+            </div>
+          </div>
+        `
+        : "";
+      const report45MetaHtml = activeTab === "report45"
+        ? `
+          <div class="detail" style="margin-bottom:10px;">
+            <div class="detail-body" style="display:block;">
+              <div style="font-size:26px;font-weight:800;text-align:center;line-height:1.25;margin-bottom:10px;">
+                ${cfg.reportMeta.title}
+              </div>
+              <div style="display:flex;gap:30px;justify-content:center;font-size:18px;font-weight:700;">
+                <span>Đơn vị: ${cfg.reportMeta.unit}</span>
+                <span>Từ Tháng: ${cfg.reportMeta.fromMonth}</span>
+                <span>Đến tháng: ${cfg.reportMeta.toMonth}</span>
+              </div>
+            </div>
+          </div>
+        `
+        : "";
+      const report46MetaHtml = activeTab === "report46"
+        ? `
+          <div class="detail" style="margin-bottom:10px;">
+            <div class="detail-body" style="display:block;">
+              <div style="font-size:26px;font-weight:800;text-align:center;line-height:1.25;margin-bottom:10px;">
+                ${cfg.reportMeta.title}
+              </div>
+              <div style="display:flex;gap:30px;justify-content:center;font-size:18px;font-weight:700;">
+                <span>Đơn vị: ${cfg.reportMeta.unit}</span>
+              </div>
+            </div>
+          </div>
+        `
+        : "";
+      const showCrud = activeTab !== "report43" && activeTab !== "report44" && activeTab !== "report45" && activeTab !== "report46";
+
       container.innerHTML = `
         <div class="panel-head">
           <b>${cfg.title}</b>
           <div class="panel-head-right">
-            <small>Nhấn để xem thông tin chi tiết bên dưới</small>
-            <div class="toolbar">
-              <button id="btnAddRow" type="button">Thêm</button>
-              <button id="btnEditRow" type="button">Sửa</button>
-              <button id="btnSaveRow" type="button" class="primary">Lưu lại</button>
-              <button id="btnDeleteRow" type="button">Xóa</button>
-            </div>
+            ${showCrud
+              ? `<small>Nhấn để xem thông tin chi tiết bên dưới</small>
+                 <div class="toolbar">
+                   <button id="btnAddRow" type="button">Thêm</button>
+                   <button id="btnEditRow" type="button">Sửa</button>
+                   <button id="btnSaveRow" type="button" class="primary">Lưu lại</button>
+                   <button id="btnDeleteRow" type="button">Xóa</button>
+                 </div>`
+              : ""
+            }
           </div>
         </div>
         <div class="panel-body">
+          ${report43MetaHtml}
+          ${report44MetaHtml}
+          ${report45MetaHtml}
+          ${report46MetaHtml}
           <table>
             <thead>${thead}</thead>
             <tbody>${rowsHtml}</tbody>
           </table>
-          <div class="detail">
-            <div class="detail-head">Thông tin chi tiết</div>
-            <div class="detail-body">${detailHtml}</div>
-          </div>
+          ${showCrud
+            ? `<div class="detail">
+                 <div class="detail-head">Thông tin chi tiết</div>
+                 <div class="detail-body">${detailHtml}</div>
+               </div>`
+            : ""
+          }
           ${approvalHtml}
         </div>
       `;
@@ -391,6 +857,7 @@
       const btnEditRow = container.querySelector("#btnEditRow");
       const btnSaveRow = container.querySelector("#btnSaveRow");
       const btnDeleteRow = container.querySelector("#btnDeleteRow");
+      if (!showCrud) return;
 
       btnAddRow.addEventListener("click", () => {
         const newRow = createDefaultRow(activeTab);
@@ -425,6 +892,9 @@
           targetRow[field] = input.value;
         });
         if (targetRow.amount !== undefined) targetRow.amount = Number(targetRow.amount || 0);
+        if (targetRow.completedCount !== undefined) targetRow.completedCount = Number(targetRow.completedCount || 0);
+        if (targetRow.inProgressCount !== undefined) targetRow.inProgressCount = Number(targetRow.inProgressCount || 0);
+        if (targetRow.notCollectedCount !== undefined) targetRow.notCollectedCount = Number(targetRow.notCollectedCount || 0);
         if (activeTab === "task138") syncApprovalFromRegistration(targetRow);
         delete editingRowByTab[activeTab];
         renderPanel();
@@ -439,6 +909,11 @@
         if (activeTab === "task138") removeApprovalByRegistrationId(selected.id);
         if (activeTab === "task139") removeRegistrationByApprovalId(selected.id);
         cfg.rows.splice(rowIdx, 1);
+        if (activeTab === "report41" || activeTab === "report42") {
+          cfg.rows.forEach((row, index) => {
+            row.stt = index + 1;
+          });
+        }
         selectedRowByTab[activeTab] = 0;
         delete editingRowByTab[activeTab];
         renderPanel();

@@ -328,7 +328,7 @@ tr.selectable.active {
     background: #fbe8e8;
     color: #b23636;
 }
-
+    
 .empty {
     color: var(--muted);
     padding: 16px;
