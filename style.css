@@ -9,8 +9,14 @@
     --white: #ffffff;
 }
 
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
+}
+
+html {
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -18,21 +24,56 @@ body {
     font-family: "Segoe UI", Tahoma, Arial, sans-serif;
     color: var(--text);
     background: var(--bg);
+    min-height: 100vh;
 }
 
-.app {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    height: 100vh;
+body.app-no-scroll {
     overflow: hidden;
 }
 
+.app {
+    display: flex;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+}
+
+/* Sidebar: drawer (mobile) / cột (≥768px) — cùng mẫu qldstbctt */
 .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(280px, 86vw);
+    max-width: 100%;
     background: linear-gradient(180deg, var(--blue-900), #0a2e54);
     color: #dbe9f8;
     border-right: 1px solid #1f4b79;
     padding: 12px;
     overflow-y: auto;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.sidebar[aria-hidden="false"] {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+}
+
+.sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 199;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.sidebar-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
 }
 
 .brand {
@@ -74,30 +115,90 @@ body {
 }
 
 .main {
-    display: grid;
-    grid-template-rows: 52px 1fr;
+    flex: 1;
     min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0;
     overflow: hidden;
 }
 
 .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 14px;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    min-height: 52px;
+    padding: 0.5rem 0.75rem;
     background: var(--white);
     border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 8px rgba(9, 56, 101, 0.08);
+}
+
+.app-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 8px;
+    background: #eef3f8;
+    color: var(--blue-800);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.app-menu-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+.topbar-title-wrap {
+    flex: 1;
+    min-width: 0;
 }
 
 .topbar h1 {
     margin: 0;
-    font-size: 16px;
+    font-size: clamp(0.95rem, 3.5vw, 1rem);
     color: var(--blue-800);
+    font-weight: 700;
+    line-height: 1.3;
 }
 
-.workspace {
+.app-clock {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.app-clock--desktop {
+    display: none;
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    color: var(--muted);
+}
+
+.main .workspace {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
     padding: 10px;
     overflow: auto;
+}
+
+.workspace.workspace--task126 {
+    overflow: hidden;
 }
 
 .tabs {
@@ -158,6 +259,18 @@ body {
     border: 1px solid var(--line);
     border-radius: 10px;
     overflow: hidden;
+}
+
+.panel.panel--task126 {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel.panel--task126 .panel-head {
+    flex-shrink: 0;
 }
 
 .panel-head {
@@ -352,17 +465,255 @@ tr.selectable.active {
     text-align: center;
 }
 
-@media (max-width: 980px) {
-    .app {
-        grid-template-columns: 1fr;
+/* —— task126: danh sách mã + chi tiết trong modal (giống qldstbctt) —— */
+.panel-body--task126 {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+}
+
+.task126-list-wrap {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--white);
+}
+
+.task126-device-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.task126-selectable {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0;
+    min-height: 48px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e6edf5;
+    cursor: pointer;
+    background: #fff;
+    text-align: left;
+}
+
+.task126-li-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+}
+
+.task126-li-sub {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-top: 6px;
+    word-break: break-word;
+}
+
+.task126-selectable:nth-child(odd) {
+    background: #f7fbff;
+}
+
+.task126-selectable:last-child {
+    border-bottom: 0;
+}
+
+.task126-selectable.active {
+    background: #e9f2fe;
+    box-shadow: inset 3px 0 0 0 var(--blue-800);
+}
+
+.task126-code {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue-800);
+}
+
+.task126-chev {
+    color: #8a9db5;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.workspace.task126-noscroll {
+    overflow: hidden;
+}
+
+.task126-detail-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0;
+}
+
+.task126-detail-overlay[hidden] {
+    display: none;
+}
+
+.task126-detail-scrim {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: rgba(20, 40, 65, 0.45);
+    cursor: pointer;
+}
+
+.task126-detail-panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 85vh;
+    min-height: 85dvh;
+    max-height: min(100vh, 100dvh);
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    outline: none;
+}
+
+.task126-detail-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    background: #f5f9ff;
+}
+
+.task126-detail-title {
+    margin: 0;
+    font-size: 16px;
+    color: var(--blue-800);
+}
+
+.task126-detail-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 8px;
+    background: #eef3fa;
+    color: #3a4a5a;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.task126-detail-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 10px 12px;
+}
+
+.task126-detail-kv-inner.detail-body {
+    padding: 10px 0 0;
+}
+
+@media (min-width: 720px) {
+    .task126-detail-overlay {
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
     }
 
+    .task126-detail-panel {
+        flex: 0 1 auto;
+        min-height: 0;
+        max-width: 520px;
+        width: 100%;
+        max-height: min(90vh, 90dvh);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .task126-list-wrap {
+        max-height: min(75vh, 600px);
+    }
+}
+
+/* Bố cục lớn & sidebar cố định — theo mẫu qldstbctt (768px) */
+@media (min-width: 768px) {
     .sidebar {
-        border-right: none;
-        border-bottom: 1px solid #1f4b79;
+        position: relative;
+        width: 260px;
+        flex-shrink: 0;
+        transform: none !important;
+        box-shadow: none !important;
     }
 
+    .sidebar[aria-hidden="false"] {
+        box-shadow: none !important;
+    }
+
+    .sidebar-backdrop {
+        display: none;
+    }
+
+    .app-menu-btn {
+        display: none;
+    }
+
+    .topbar {
+        flex-wrap: nowrap;
+    }
+
+    .app-clock {
+        display: none;
+    }
+
+    .app-clock--desktop {
+        display: block;
+    }
+}
+
+/* Tab bảng: thu hẹp trên màn nhỏ */
+@media (max-width: 767px) {
+    .tab {
+        flex: 0 1 auto;
+        min-width: min(360px, calc(100vw - 2.5rem));
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 980px) {
     .detail-body {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .approval-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .workspace {
+        padding: 8px;
     }
 }

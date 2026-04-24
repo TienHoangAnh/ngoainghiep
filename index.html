@@ -8,7 +8,8 @@
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar">
+    <div class="sidebar-backdrop" id="sidebarBackdrop" hidden aria-hidden="true"></div>
+    <aside class="sidebar" id="appSidebar" aria-label="Menu điều hướng" aria-hidden="true">
       <div class="brand">Hệ thống nghiệp vụ </div>
 
       <div class="menu-group-title">Quản lý nghiệp vụ</div>
@@ -46,8 +47,18 @@
 
     <section class="main">
       <header class="topbar">
-        <h1>Phần mêm quản lý ngoại nghiệp</h1>
-        <small id="clock"></small>
+        <button type="button" class="app-menu-btn" id="appMenuBtn" aria-expanded="false" aria-controls="appSidebar" title="Mở menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+        <div class="topbar-title-wrap">
+          <h1>Phần mêm quản lý ngoại nghiệp</h1>
+          <small class="app-clock" id="clock"></small>
+        </div>
+        <small class="app-clock--desktop" id="clockDesktop"></small>
       </header>
 
       <div class="workspace">
@@ -684,6 +695,8 @@
     const selectedRowByTab = {};
     const editingRowByTab = {};
     const reportFilterByTab = {};
+    let lastRenderedActiveTab = null;
+    let detailPanelOpen = false;
 
     function statusPill(status) {
       if (!status) return "-";
@@ -705,6 +718,8 @@
       if (tabKey === "task127") return ["assignee", "assignedDevices", "dueDate", "status"];
       if (tabKey === "task128") return ["assignee", "devices", "receiveStatus", "rejectReason"];
       if (tabKey === "task129") return ["deviceCode", "collector", "saveStatus", "updated"];
+      if (tabKey === "task130" || tabKey === "task131" || tabKey === "task132")
+        return ["category", "deviceCode", "collector", "saveStatus", "updated"];
       if (tabKey === "report103") return ["workType", "period", "completedCount", "inProgressCount", "notCollectedCount"];
       if (tabKey === "report104") return ["objectCode", "objectType", "coordinate", "technicalInfo", "managerUnit", "imageName", "status"];
       if (tabKey === "report105") return ["unit", "date", "object", "collectedNew", "cumulativeByDate", "assignedData", "registeredData", "calcUnit"];
@@ -763,6 +778,39 @@
         return {
           formCode: "FM-129-" + String(Math.floor(Math.random() * 900 + 100)),
           deviceCode: "TB-126-XXX",
+          collector: "nhan.su.moi",
+          saveStatus: "Draft",
+          updated: new Date().toLocaleString("vi-VN"),
+          warning: "-"
+        };
+      }
+      if (tabKey === "task130") {
+        return {
+          formCode: "FM-130-" + String(Math.floor(Math.random() * 900 + 100)),
+          category: "Hộp nối dây ODF",
+          deviceCode: "ODF-TB-XXX",
+          collector: "nhan.su.moi",
+          saveStatus: "Draft",
+          updated: new Date().toLocaleString("vi-VN"),
+          warning: "-"
+        };
+      }
+      if (tabKey === "task131") {
+        return {
+          formCode: "FM-131-" + String(Math.floor(Math.random() * 900 + 100)),
+          category: "Bộ đỡ viễn thông",
+          deviceCode: "PK-XXX",
+          collector: "nhan.su.moi",
+          saveStatus: "Draft",
+          updated: new Date().toLocaleString("vi-VN"),
+          warning: "-"
+        };
+      }
+      if (tabKey === "task132") {
+        return {
+          formCode: "FM-132-" + String(Math.floor(Math.random() * 900 + 100)),
+          category: "Thiết bị SDH",
+          deviceCode: "TD-XXX",
           collector: "nhan.su.moi",
           saveStatus: "Draft",
           updated: new Date().toLocaleString("vi-VN"),
@@ -1077,6 +1125,9 @@
       if (tabKey === "task129") {
         return ["formCode", "deviceCode", "collector", "saveStatus", "updated"];
       }
+      if (tabKey === "task130" || tabKey === "task131" || tabKey === "task132") {
+        return ["formCode", "category", "deviceCode", "collector", "saveStatus", "updated"];
+      }
       if (tabKey === "report103") {
         return ["stt", "workType", "period", "completedCount", "inProgressCount", "notCollectedCount"];
       }
@@ -1182,15 +1233,98 @@
       popup.print();
     }
 
+    function escAttr(s) {
+      return String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function getRowListLines(row, cfg) {
+      const dm = cfg.detailMap;
+      if (!row || !dm || !dm.length) {
+        return { primary: "—", sub: "" };
+      }
+      const k0 = dm[0][1];
+      const primary = row[k0] !== undefined && row[k0] !== null ? String(row[k0]) : "—";
+      let sub = "";
+      if (dm.length > 1) {
+        const v1 = row[dm[1][1]];
+        sub = v1 !== undefined && v1 !== null ? String(v1) : "—";
+      }
+      if (dm.length > 2) {
+        const v2 = row[dm[2][1]];
+        const s2 = v2 !== undefined && v2 !== null ? String(v2) : "—";
+        sub = sub ? `${sub} · ${s2}` : s2;
+      }
+      return { primary, sub };
+    }
+
+    function getDetailValueHtmlForKey(activeTab, row, key, isFieldEditable) {
+      if (!isFieldEditable) {
+        if (key === "status" || key === "result" || key === "receiveStatus") {
+          return statusPill(row[key]);
+        }
+        const v = row[key];
+        return v !== undefined && v !== null ? String(v) : "-";
+      }
+      const r = row;
+      if (activeTab === "task137" && key === "status") {
+        return `<select class="cell-select" data-field="status"><option ${r.status === "Đã giao" ? "selected" : ""}>Đã giao</option><option ${r.status === "Chờ tiếp nhận" ? "selected" : ""}>Chờ tiếp nhận</option></select>`;
+      }
+      if (activeTab === "task138" && key === "status") {
+        return `<select class="cell-select" data-field="status"><option ${r.status === "Chờ duyệt" ? "selected" : ""}>Chờ duyệt</option><option ${r.status === "Đã duyệt" ? "selected" : ""}>Đã duyệt</option><option ${r.status === "Từ chối" ? "selected" : ""}>Từ chối</option></select>`;
+      }
+      const numType =
+        key === "amount" ||
+        key === "value" ||
+        key === "dataSizeMb" ||
+        key === "stt" ||
+        key === "completedCount" ||
+        key === "inProgressCount" ||
+        key === "notCollectedCount" ||
+        key === "collectedNew";
+      if (numType) {
+        return `<input class="cell-input" data-field="${key}" type="number" min="0" value="${r[key] === undefined || r[key] === null ? 0 : r[key]}">`;
+      }
+      return `<input class="cell-input" data-field="${key}" value="${escAttr(r[key] === undefined || r[key] === null ? "" : r[key])}">`;
+    }
+
+    function buildRowDetailBodyHtml(cfg, selected, activeTab, editingRowIdx, displayRowIndex, editableFields) {
+      if (!selected) {
+        return `<div class="empty">Chọn dòng trên danh sách.</div>`;
+      }
+      const lineEdit = editingRowIdx !== undefined && editingRowIdx === displayRowIndex;
+      return cfg.detailMap
+        .map(([label, key]) => {
+          const isField = lineEdit && editableFields.includes(key);
+          const valueHtml = getDetailValueHtmlForKey(activeTab, selected, key, isField);
+          return `<div class="kv"><span>${label}</span><b>${valueHtml}</b></div>`;
+        })
+        .join("");
+    }
+
     function renderPanel() {
       const container = document.getElementById("panelContainer");
       refreshOverviewMetrics();
       if (!activeTab || !viewConfigs[activeTab]) {
+        container.className = "panel";
+        const w = document.querySelector(".workspace");
+        if (w) {
+          w.classList.remove("task126-noscroll", "workspace--task126");
+        }
+        lastRenderedActiveTab = null;
+        detailPanelOpen = false;
         container.innerHTML = `<div class="empty">Chọn chức năng bên trái để mở tab.</div>`;
         return;
       }
 
       const cfg = viewConfigs[activeTab];
+      if (lastRenderedActiveTab !== null && lastRenderedActiveTab !== activeTab) {
+        detailPanelOpen = false;
+      }
+      lastRenderedActiveTab = activeTab;
       let filteredRows = cfg.rows;
       if (activeTab === "report105" && reportFilterByTab.report105) {
         filteredRows = cfg.rows.filter((row) => row.date === reportFilterByTab.report105);
@@ -1208,196 +1342,9 @@
       const selected = filteredRows[rowIdx] || null;
       const editingRowIdx = editingRowByTab[activeTab];
       const editableFields = getEditableFields(activeTab);
-
-      const thead = `<tr>${cfg.columns.map((c) => `<th>${c}</th>`).join("")}</tr>`;
-      const rowsHtml = filteredRows
-        .map((row, idx) => {
-          const rowClass = "selectable" + (idx === rowIdx ? " active" : "") + (row.isTotal ? " total-row" : "");
-          const isEditing = editingRowIdx === idx;
-          let cells = "";
-          if (activeTab === "task137") {
-            cells = `
-              <td>${row.id}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="assigner" value="${row.assigner}">` : row.assigner}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="receiver" value="${row.receiver}">` : row.receiver}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="amount" type="number" min="0" value="${row.amount}">` : row.amount}</td>
-              <td>${isEditing
-                ? `<select class="cell-select" data-field="status"><option ${row.status === "Đã giao" ? "selected" : ""}>Đã giao</option><option ${row.status === "Chờ tiếp nhận" ? "selected" : ""}>Chờ tiếp nhận</option></select>`
-                : statusPill(row.status)}</td>
-            `;
-          } else if (activeTab === "task126") {
-            cells = `
-              <td>${row.deviceCode}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="deviceType" value="${row.deviceType}">` : row.deviceType}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="source" value="${row.source}">` : row.source}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="managerUnit" value="${row.managerUnit}">` : row.managerUnit}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="status" value="${row.status}">` : statusPill(row.status)}</td>
-            `;
-          } else if (activeTab === "task127") {
-            cells = `
-              <td>${row.assignmentCode}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="assignee" value="${row.assignee}">` : row.assignee}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="assignedDevices" value="${row.assignedDevices}">` : row.assignedDevices}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="dueDate" value="${row.dueDate}">` : row.dueDate}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="status" value="${row.status}">` : statusPill(row.status)}</td>
-            `;
-          } else if (activeTab === "task128") {
-            cells = `
-              <td>${row.assignmentCode}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="assignee" value="${row.assignee}">` : row.assignee}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="devices" value="${row.devices}">` : row.devices}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="receiveStatus" value="${row.receiveStatus}">` : statusPill(row.receiveStatus)}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="rejectReason" value="${row.rejectReason}">` : row.rejectReason}</td>
-            `;
-          } else if (activeTab === "task129") {
-            cells = `
-              <td>${row.formCode}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="deviceCode" value="${row.deviceCode}">` : row.deviceCode}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="collector" value="${row.collector}">` : row.collector}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="saveStatus" value="${row.saveStatus}">` : row.saveStatus}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="updated" value="${row.updated}">` : row.updated}</td>
-            `;
-          } else if (activeTab === "task138") {
-            cells = `
-              <td>${row.id}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="task" value="${row.task}">` : row.task}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="amount" type="number" min="0" value="${row.amount}">` : row.amount}</td>
-              <td>${isEditing
-                ? `<select class="cell-select" data-field="status"><option ${row.status === "Chờ duyệt" ? "selected" : ""}>Chờ duyệt</option><option ${row.status === "Đã duyệt" ? "selected" : ""}>Đã duyệt</option><option ${row.status === "Từ chối" ? "selected" : ""}>Từ chối</option></select>`
-                : statusPill(row.status)}</td>
-            `;
-          } else if (activeTab === "task139") {
-            cells = `
-              <td>${row.id}</td>
-              <td>${row.unit}</td>
-              <td>${statusPill(row.result)}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="reason" value="${row.reason || ""}">` : (row.reason || "-")}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="officer" value="${row.officer || ""}">` : (row.officer || "-")}</td>
-            `;
-          } else if (activeTab === "report41") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="session" value="${row.session}">` : row.session}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="period" value="${row.period}">` : row.period}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="completedCount" type="number" min="0" value="${row.completedCount}">` : row.completedCount}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="inProgressCount" type="number" min="0" value="${row.inProgressCount}">` : row.inProgressCount}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="notCollectedCount" type="number" min="0" value="${row.notCollectedCount}">` : row.notCollectedCount}</td>
-            `;
-          } else if (activeTab === "report103") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="workType" value="${row.workType}">` : row.workType}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="period" value="${row.period}">` : row.period}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="completedCount" type="number" min="0" value="${row.completedCount}">` : row.completedCount}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="inProgressCount" type="number" min="0" value="${row.inProgressCount}">` : row.inProgressCount}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="notCollectedCount" type="number" min="0" value="${row.notCollectedCount}">` : row.notCollectedCount}</td>
-            `;
-          } else if (activeTab === "report42") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="workType" value="${row.workType}">` : row.workType}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="period" value="${row.period}">` : row.period}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="completedCount" type="number" min="0" value="${row.completedCount}">` : row.completedCount}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="inProgressCount" type="number" min="0" value="${row.inProgressCount}">` : row.inProgressCount}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="notCollectedCount" type="number" min="0" value="${row.notCollectedCount}">` : row.notCollectedCount}</td>
-            `;
-          } else if (activeTab === "report104") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="objectCode" value="${row.objectCode}">` : row.objectCode}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="objectType" value="${row.objectType}">` : row.objectType}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="coordinate" value="${row.coordinate}">` : row.coordinate}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="technicalInfo" value="${row.technicalInfo}">` : row.technicalInfo}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="managerUnit" value="${row.managerUnit}">` : row.managerUnit}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="imageName" value="${row.imageName}">` : row.imageName}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="status" value="${row.status}">` : row.status}</td>
-            `;
-          } else if (activeTab === "report43" || activeTab === "report105") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="date" value="${row.date}">` : row.date}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="object" value="${row.object}">` : row.object}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="collectedNew" value="${row.collectedNew}">` : row.collectedNew}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="cumulativeByDate" value="${row.cumulativeByDate}">` : row.cumulativeByDate}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
-            `;
-          } else if (activeTab === "report44" || activeTab === "report106") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="week" value="${row.week}">` : row.week}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="object" value="${row.object}">` : row.object}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="collectedNew" value="${row.collectedNew}">` : row.collectedNew}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="cumulativeByWeek" value="${row.cumulativeByWeek}">` : row.cumulativeByWeek}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
-            `;
-          } else if (activeTab === "report45" || activeTab === "report107") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="month" value="${row.month}">` : row.month}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="object" value="${row.object}">` : row.object}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="collectedNew" value="${row.collectedNew}">` : row.collectedNew}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="cumulativeByMonth" value="${row.cumulativeByMonth}">` : row.cumulativeByMonth}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
-            `;
-          } else if (activeTab === "report46" || activeTab === "report108") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="unit" value="${row.unit}">` : row.unit}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="quarter" value="${row.quarter}">` : row.quarter}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="object" value="${row.object}">` : row.object}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="collectedNew" value="${row.collectedNew}">` : row.collectedNew}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="cumulativeByQuarter" value="${row.cumulativeByQuarter}">` : row.cumulativeByQuarter}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="assignedData" value="${row.assignedData}">` : row.assignedData}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="registeredData" value="${row.registeredData}">` : row.registeredData}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="calcUnit" value="${row.calcUnit}">` : row.calcUnit}</td>
-            `;
-          } else if (activeTab === "report109") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="username" value="${row.username}">` : row.username}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="scope" value="${row.scope}">` : row.scope}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="mapLayer" value="${row.mapLayer}">` : row.mapLayer}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="dataSizeMb" type="number" min="0" value="${row.dataSizeMb}">` : row.dataSizeMb}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="downloadStatus" value="${row.downloadStatus}">` : row.downloadStatus}</td>
-            `;
-          } else if (activeTab === "report110") {
-            cells = `
-              <td>${row.stt}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="username" value="${row.username}">` : row.username}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="scope" value="${row.scope}">` : row.scope}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="gridObject" value="${row.gridObject}">` : row.gridObject}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="dataSizeMb" type="number" min="0" value="${row.dataSizeMb}">` : row.dataSizeMb}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="downloadStatus" value="${row.downloadStatus}">` : row.downloadStatus}</td>
-            `;
-          } else {
-            cells = `
-              <td>${row.metric}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="value" type="number" min="0" value="${row.value}">` : row.value}</td>
-              <td>${isEditing ? `<input class="cell-input" data-field="note" value="${row.note}">` : row.note}</td>
-            `;
-          }
-          return `<tr class="${rowClass}" data-index="${idx}">${cells}</tr>`;
-        })
-        .join("");
-
-      const detailHtml = selected
-        ? cfg.detailMap
-            .map(([label, key]) => {
-              const value = key === "status" || key === "result" ? statusPill(selected[key]) : (selected[key] ?? "-");
-              return `<div class="kv"><span>${label}</span><b>${value}</b></div>`;
-            })
-            .join("")
-        : `<div class="empty">Không có dữ liệu.</div>`;
+      const isRowLineEditing = editingRowIdx !== undefined && editingRowIdx === rowIdx;
+      const listDetailInner = buildRowDetailBodyHtml(cfg, selected, activeTab, editingRowIdx, rowIdx, editableFields);
+      const listTitlePrimary = getRowListLines(selected || (filteredRows[0] || {}), cfg).primary;
 
       const approvalHtml = activeTab === "task139" && selected
         ? `
@@ -1579,6 +1526,9 @@
         activeTab === "task127" ||
         activeTab === "task128" ||
         activeTab === "task129" ||
+        activeTab === "task130" ||
+        activeTab === "task131" ||
+        activeTab === "task132" ||
         activeTab === "report103" ||
         activeTab === "report104" ||
         activeTab === "report105" ||
@@ -1598,12 +1548,47 @@
         activeTab !== "report107" &&
         activeTab !== "report108";
 
+      const listSection = (() => {
+        if (!filteredRows.length) {
+          return `<div class="task126-list-wrap"><div class="empty" style="padding:20px;">Không có dữ liệu.</div></div>`;
+        }
+        const items = filteredRows
+          .map((row, idx) => {
+            const active = idx === rowIdx ? " active" : "";
+            const { primary, sub } = getRowListLines(row, cfg);
+            return `<li class="task126-selectable${active}" data-index="${idx}" role="button" tabindex="0">
+                  <div class="task126-li-main">
+                    <span class="task126-code">${primary}</span>
+                    <span class="task126-chev" aria-hidden="true">›</span>
+                  </div>
+                  ${sub ? `<div class="task126-li-sub">${sub}</div>` : ""}
+                </li>`;
+          })
+          .join("");
+        return `<div class="task126-list-wrap"><ul class="task126-device-list">${items}</ul></div>`;
+      })();
+
+      const rowOverlaySection = `
+        <div class="task126-detail-overlay" id="rowDetOverlay" ${detailPanelOpen ? "" : "hidden"} aria-hidden="${detailPanelOpen ? "false" : "true"}">
+          <button type="button" class="task126-detail-scrim" id="rowDetScrim" aria-label="Đóng chi tiết"></button>
+          <div class="task126-detail-panel" id="rowDetPanel" role="dialog" aria-modal="true" aria-labelledby="rowDetTitle" tabindex="-1">
+            <div class="task126-detail-header">
+              <h2 class="task126-detail-title" id="rowDetTitle">${isRowLineEditing && selected ? "Sửa thông tin" : "Chi tiết"}${selected ? ` — ${listTitlePrimary}` : ""}</h2>
+              <button type="button" class="task126-detail-close" id="rowDetClose" aria-label="Đóng">×</button>
+            </div>
+            <div class="task126-detail-body" id="rowDetBody">
+              <div class="task126-detail-kv-inner detail-body">${listDetailInner}</div>
+              ${activeTab === "task139" && selected && detailPanelOpen ? approvalHtml : ""}
+            </div>
+          </div>
+        </div>`;
+
       container.innerHTML = `
         <div class="panel-head">
           <b>${cfg.title}</b>
           <div class="panel-head-right">
             ${showCrud
-              ? `<small>Nhấn để xem thông tin chi tiết bên dưới</small>
+              ? `<small>Nhấn dòng trên danh sách để xem chi tiết (gần toàn màn hình)</small>
                  <div class="toolbar">
                    <button id="btnAddRow" type="button">Thêm</button>
                    <button id="btnEditRow" type="button">Sửa</button>
@@ -1615,7 +1600,7 @@
             }
           </div>
         </div>
-        <div class="panel-body">
+        <div class="panel-body panel-body--task126">
           ${report43MetaHtml}
           ${report44MetaHtml}
           ${report45MetaHtml}
@@ -1624,28 +1609,47 @@
           ${report106FilterHtml}
           ${report107FilterHtml}
           ${report108FilterHtml}
-          <table>
-            <thead>${thead}</thead>
-            <tbody>${rowsHtml}</tbody>
-          </table>
-          ${showCrud
-            ? `<div class="detail">
-                 <div class="detail-head">Thông tin chi tiết</div>
-                 <div class="detail-body">${detailHtml}</div>
-               </div>`
-            : ""
-          }
-          ${approvalHtml}
+          ${listSection}
         </div>
+        ${rowOverlaySection}
       `;
 
-      container.querySelectorAll("tr.selectable").forEach((tr) => {
-        tr.addEventListener("click", () => {
+      container.className = "panel panel--task126";
+      const ws = document.querySelector(".workspace");
+      if (ws) {
+        ws.classList.add("workspace--task126");
+        ws.classList.toggle("task126-noscroll", detailPanelOpen);
+      }
+
+      container.querySelectorAll(".task126-selectable").forEach((li) => {
+        li.addEventListener("click", () => {
           if (editingRowByTab[activeTab] !== undefined) return;
-          selectedRowByTab[activeTab] = Number(tr.dataset.index);
+          selectedRowByTab[activeTab] = Number(li.dataset.index);
+          detailPanelOpen = true;
           renderPanel();
         });
+        li.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            li.click();
+          }
+        });
       });
+      const closeRowDetail = () => {
+        detailPanelOpen = false;
+        if (editingRowByTab[activeTab] !== undefined) {
+          delete editingRowByTab[activeTab];
+        }
+        renderPanel();
+      };
+      const scrim = container.querySelector("#rowDetScrim");
+      const btnClose = container.querySelector("#rowDetClose");
+      if (scrim) scrim.addEventListener("click", closeRowDetail);
+      if (btnClose) btnClose.addEventListener("click", closeRowDetail);
+      if (detailPanelOpen) {
+        const rowPanel = container.querySelector("#rowDetPanel");
+        if (rowPanel) rowPanel.focus();
+      }
 
       container.querySelectorAll(".cell-input, .cell-select").forEach((el) => {
         el.addEventListener("click", (e) => e.stopPropagation());
@@ -1754,6 +1758,7 @@
         if (activeTab === "task138") syncApprovalFromRegistration(newRow);
         selectedRowByTab[activeTab] = cfg.rows.length - 1;
         editingRowByTab[activeTab] = cfg.rows.length - 1;
+        detailPanelOpen = true;
         renderPanel();
       });
 
@@ -1762,6 +1767,7 @@
           alert("Vui lòng chọn 1 dòng để sửa.");
           return;
         }
+        detailPanelOpen = true;
         editingRowByTab[activeTab] = rowIdx;
         renderPanel();
       });
@@ -1774,7 +1780,12 @@
         }
         const targetRow = cfg.rows[editIdx];
         if (!targetRow) return;
-        const editRowEl = container.querySelector(`tr[data-index="${editIdx}"]`);
+        const editRowEl =
+          container.querySelector("#rowDetBody");
+        if (!editRowEl) {
+          alert("Không tìm thấy vùng chỉnh sửa.");
+          return;
+        }
         editableFields.forEach((field) => {
           const input = editRowEl.querySelector(`[data-field="${field}"]`);
           if (!input) return;
@@ -1785,6 +1796,7 @@
         if (targetRow.inProgressCount !== undefined) targetRow.inProgressCount = Number(targetRow.inProgressCount || 0);
         if (targetRow.notCollectedCount !== undefined) targetRow.notCollectedCount = Number(targetRow.notCollectedCount || 0);
         if (targetRow.dataSizeMb !== undefined) targetRow.dataSizeMb = Number(targetRow.dataSizeMb || 0);
+        if (targetRow.value !== undefined) targetRow.value = Number(targetRow.value || 0);
         if (activeTab === "task138") syncApprovalFromRegistration(targetRow);
         delete editingRowByTab[activeTab];
         renderPanel();
@@ -1887,10 +1899,91 @@
     });
 
     function updateClock() {
-      document.getElementById("clock").textContent = new Date().toLocaleString("vi-VN");
+      const t = new Date().toLocaleString("vi-VN");
+      const el = document.getElementById("clock");
+      const elD = document.getElementById("clockDesktop");
+      if (el) el.textContent = t;
+      if (elD) elD.textContent = t;
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || !detailPanelOpen) return;
+      detailPanelOpen = false;
+      if (editingRowByTab[activeTab] !== undefined) {
+        delete editingRowByTab[activeTab];
+      }
+      renderPanel();
+    });
+
+    (function initMobileMenu() {
+      const sidebar = document.getElementById("appSidebar");
+      const backdrop = document.getElementById("sidebarBackdrop");
+      const menuBtn = document.getElementById("appMenuBtn");
+      if (!sidebar || !backdrop || !menuBtn) return;
+
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        sidebar.setAttribute("aria-hidden", "false");
+      }
+
+      function openMenu() {
+        if (window.innerWidth >= 768) return;
+        sidebar.setAttribute("aria-hidden", "false");
+        backdrop.hidden = false;
+        backdrop.classList.add("is-open");
+        menuBtn.setAttribute("aria-expanded", "true");
+        document.body.classList.add("app-no-scroll");
+      }
+
+      function closeMenu() {
+        if (window.innerWidth >= 768) {
+          sidebar.setAttribute("aria-hidden", "false");
+          backdrop.classList.remove("is-open");
+          backdrop.hidden = true;
+          document.body.classList.remove("app-no-scroll");
+          menuBtn.setAttribute("aria-expanded", "false");
+          return;
+        }
+        sidebar.setAttribute("aria-hidden", "true");
+        backdrop.classList.remove("is-open");
+        menuBtn.setAttribute("aria-expanded", "false");
+        setTimeout(function () { backdrop.hidden = true; }, 200);
+        document.body.classList.remove("app-no-scroll");
+      }
+
+      function toggleMenu() {
+        if (sidebar.getAttribute("aria-hidden") === "true") openMenu();
+        else closeMenu();
+      }
+
+      menuBtn.addEventListener("click", toggleMenu);
+      backdrop.addEventListener("click", closeMenu);
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && sidebar.getAttribute("aria-hidden") === "false" && window.innerWidth < 768) {
+          closeMenu();
+        }
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth >= 768) {
+          closeMenu();
+        } else {
+          sidebar.setAttribute("aria-hidden", "true");
+          backdrop.classList.remove("is-open");
+          backdrop.hidden = true;
+          document.body.classList.remove("app-no-scroll");
+          menuBtn.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      document.querySelectorAll(".menu-item").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (window.innerWidth < 768) closeMenu();
+        });
+      });
+    })();
 
     openTab("task137");
   </script>
